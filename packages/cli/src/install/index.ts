@@ -1,10 +1,10 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import inquirer from 'inquirer'
 import { Logger } from '@yunyoujun/logger'
 import type commander from 'commander'
 import Repo from './repo'
 
-export default function(cli: commander.Command) {
+export default function (cli: commander.Command) {
   cli
     .command('install [project]')
     .description('安装依赖')

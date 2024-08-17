@@ -9,7 +9,7 @@ export function displayCall(
 ) {
   const method = propertyDescriptor.value
 
-  propertyDescriptor.value = function(...args: any[]) {
+  propertyDescriptor.value = function (...args: any[]) {
     // 将 greet 的参数列表转换为字符串
     const params = args.map(a => JSON.stringify(a)).join()
     // 调用 greet() 并获取其返回值
@@ -27,7 +27,7 @@ export function displayCall(
 
 // 类捕获异常
 export function tryCatch(errorHandler?: (error?: Error) => void) {
-  return function(
+  return function (
     target: any,
     propertyKey: string,
     descriptor: PropertyDescriptor,

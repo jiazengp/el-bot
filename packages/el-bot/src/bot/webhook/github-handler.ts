@@ -1,5 +1,5 @@
-import type { EventEmitter } from 'events'
-import type { IncomingMessage, ServerResponse } from 'http'
+import type { EventEmitter } from 'node:events'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import shell from 'shelljs'
 
 import { Webhooks, createNodeMiddleware } from '@octokit/webhooks'
@@ -14,7 +14,7 @@ export interface handler extends EventEmitter {
   ): void
 }
 
-export default function(ctx: Bot) {
+export default function (ctx: Bot) {
   const config = {
     secret: ctx.el.webhook?.secret || 'el-psy-congroo',
   }

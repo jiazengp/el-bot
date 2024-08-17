@@ -3,12 +3,12 @@
 account: # 账号相关
   uin: 1233456 # QQ账号
   password: '' # 密码为空时使用扫码登录
-  encrypt: false  # 是否开启密码加密
-  status: 0      # 在线状态 请参考 https://docs.go-cqhttp.org/guide/config.html#在线状态
+  encrypt: false # 是否开启密码加密
+  status: 0 # 在线状态 请参考 https://docs.go-cqhttp.org/guide/config.html#在线状态
   relogin: # 重连设置
-    delay: 3   # 首次重连延迟, 单位秒
-    interval: 3   # 重连间隔
-    max-times: 0  # 最大重连次数, 0为无限制
+    delay: 3 # 首次重连延迟, 单位秒
+    interval: 3 # 重连间隔
+    max-times: 0 # 最大重连次数, 0为无限制
 
   # 是否使用服务器下发的新地址进行重连
   # 注意, 此设置可能导致在海外服务器上连接情况更差
@@ -67,8 +67,8 @@ default-middlewares: &default
   # https://baike.baidu.com/item/%E4%BB%A4%E7%89%8C%E6%A1%B6%E7%AE%97%E6%B3%95/6597000?fr=aladdin
   rate-limit:
     enabled: false # 是否启用限速
-    frequency: 1  # 令牌回复频率, 单位秒
-    bucket: 1     # 令牌桶大小
+    frequency: 1 # 令牌回复频率, 单位秒
+    bucket: 1 # 令牌桶大小
 
 database: # 数据库相关设置
   leveldb:
@@ -85,10 +85,10 @@ database: # 数据库相关设置
 # 连接服务列表
 servers:
   # 添加方式，同一连接方式可添加多个，具体配置说明请查看文档
-  #- http: # http 通信
-  #- ws:   # 正向 Websocket
-  #- ws-reverse: # 反向 Websocket
-  #- pprof: #性能分析服务器
+  # - http: # http 通信
+  # - ws:   # 正向 Websocket
+  # - ws-reverse: # 反向 Websocket
+  # - pprof: #性能分析服务器
   # HTTP 通信设置
   - http:
       # 服务端监听地址
@@ -108,9 +108,9 @@ servers:
         <<: *default # 引用默认中间件
       # 反向HTTP POST地址列表
       post:
-      #- url: '' # 地址
+      # - url: '' # 地址
       #  secret: ''           # 密钥
-      #- url: 127.0.0.1:5701 # 地址
+      # - url: 127.0.0.1:5701 # 地址
       #  secret: ''          # 密钥
   # 正向WS设置
   - ws:

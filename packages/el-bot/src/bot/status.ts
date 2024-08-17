@@ -7,7 +7,7 @@ export default class Status {
 
   /**
    * 是否监听发送者
-   * @param {Object} sender
+   * @param {object} sender
    */
   isListening(sender: Contact.User, listen: Config.Listen) {
     if (typeof listen === 'string') {
@@ -53,9 +53,10 @@ export default class Status {
         if (
           listen.includes(sender.id)
           || ((sender as Contact.Member).group
-            && listen.includes((sender as Contact.Member).group.id))
-        )
+          && listen.includes((sender as Contact.Member).group.id))
+        ) {
           return true
+        }
 
         if (listen.includes('master') && this.ctx.user.isMaster(sender.id))
           return true
@@ -80,8 +81,9 @@ export default class Status {
           if (
             listen.group
             && listen.group.includes((sender as Contact.Member).group.id)
-          )
+          ) {
             return true
+          }
         }
       }
     }

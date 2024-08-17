@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import axios from 'axios'
 import { Logger } from '@yunyoujun/logger'
 import download from 'download'
@@ -48,7 +48,8 @@ export default class Repo {
   async downloadLatestRelease(dest = '.') {
     if (!this.browser_download_url) {
       const lastestVersion = await this.getLatestVersion()
-      if (!lastestVersion) return
+      if (!lastestVersion)
+        return
     }
 
     const filename = this.browser_download_url.split('/').pop()
@@ -72,7 +73,7 @@ export default class Repo {
             },
           )
 
-          bar.total = parseInt(res.headers['content-length'] || '', 10) / 1000
+          bar.total = Number.parseInt(res.headers['content-length'] || '', 10) / 1000
           res.on('data', (data: any) => bar.tick(data.length / 8000))
         })
         .then(() => logger.success('下载完成'))

@@ -48,7 +48,8 @@ const friendAlias = ['user', 'qq', 'friend']
  * @param id
  */
 export async function block(type: BlockType, id: number) {
-  if (!Number.isInteger(id)) return false
+  if (!Number.isInteger(id))
+    return false
   if (friendAlias.includes(type)) {
     await blockFriend(id)
     return true
@@ -65,7 +66,8 @@ export async function block(type: BlockType, id: number) {
  * @param id
  */
 export async function unBlock(type: BlockType, id: number) {
-  if (!Number.isInteger(id)) return false
+  if (!Number.isInteger(id))
+    return false
   if (friendAlias.includes(type)) {
     await unBlockFriend(id)
     return true

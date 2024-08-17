@@ -20,7 +20,6 @@ const niubi = {
 /**
  * 获取随机句子
  * @param name
- * @returns
  */
 async function getRandomSentence(name: string) {
   let sentence = ''
@@ -37,18 +36,17 @@ async function getRandomSentence(name: string) {
 
 export interface NiubiOptions {}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function(ctx: Bot, options: NiubiOptions = {}) {
+export default function (ctx: Bot, _options: NiubiOptions = {}) {
   const { mirai } = ctx
 
   // 覆盖默认配置
-  mirai.on('message', (msg) => {
+  mirai.on('message', async (msg) => {
     let name = '我'
 
     if (!utils.isUrl(niubi.url))
-      niubiJson = require(niubi.url)
+      niubiJson = await import(niubi.url)
 
-    niubi.match.forEach(async(obj) => {
+    niubi.match.forEach(async (obj) => {
       const str = check.match(msg.plain.toLowerCase(), obj)
       if (!str)
         return
@@ -61,6 +59,7 @@ export default function(ctx: Bot, options: NiubiOptions = {}) {
           name = `「${singleMessage.display.slice(1)}」`
           return true
         }
+        return false
       })
 
       const sentence = await getRandomSentence(name)
@@ -69,7 +68,7 @@ export default function(ctx: Bot, options: NiubiOptions = {}) {
   })
 
   // 进群时
-  mirai.on('MemberJoinEvent', async(msg) => {
+  mirai.on('MemberJoinEvent', async (msg) => {
     const sentence = await getRandomSentence(msg.member.memberName)
     mirai.api.sendGroupMessage(sentence, msg.member.group.id)
   })

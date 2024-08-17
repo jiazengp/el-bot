@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import type Bot from 'el-bot'
 import dayjs from 'dayjs'
 import { htmlToText } from 'html-to-text'
@@ -27,8 +27,11 @@ class Rss {
         item: ['updated'],
       },
       content: [
+        // eslint-disable-next-line no-template-curly-in-string
         '标题：${item.title}',
+        // eslint-disable-next-line no-template-curly-in-string
         '链接：${item.link}',
+        // eslint-disable-next-line no-template-curly-in-string
         '时间：${item.updated}',
       ],
     }
@@ -66,7 +69,8 @@ class Rss {
   }
 
   save(feed: any) {
-    if (feed.items && feed.items.length <= 0) return false
+    if (feed.items && feed.items.length <= 0)
+      return false
 
     const path = `${this.ctx.tmpDir}rss.json`
     let rssJson: any = {}
@@ -84,7 +88,7 @@ class Rss {
       Object.keys(rssJson).length === 0
       || !rssJson[this.config.name]
       || (feed.items
-        && rssJson[this.config.name].items[0].pubDate !== feed.items[0].pubDate)
+      && rssJson[this.config.name].items[0].pubDate !== feed.items[0].pubDate)
     ) {
       this.ctx.logger.info(`[rss] ${feed.title} 已更新`)
       rssJson[this.config.name] = {
@@ -126,8 +130,11 @@ function format(item: any, content: string[]) {
   // default template
   if (!content) {
     content = [
+      // eslint-disable-next-line no-template-curly-in-string
       '标题：${item.title}',
+      // eslint-disable-next-line no-template-curly-in-string
       '链接：${item.link}',
+      // eslint-disable-next-line no-template-curly-in-string
       '时间：${item.updated}',
     ]
   }
@@ -136,6 +143,7 @@ function format(item: any, content: string[]) {
   })
 
   // not use eval
+  // eslint-disable-next-line no-new-func
   return Function('item', `return \`${template}\``)(item)
 }
 
@@ -159,7 +167,7 @@ function triggerRss(ctx: Bot, options: RssConfig[]) {
 
 export type RssOptions = RssConfig[]
 
-export default function(ctx: Bot, options: RssOptions) {
+export default function (ctx: Bot, options: RssOptions) {
   const { cli, mirai } = ctx
   const rssOptions = options
 

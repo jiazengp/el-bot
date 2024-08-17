@@ -2,16 +2,16 @@
   "name": "@el-bot/plugin-niubi",
   "version": "0.2.3",
   "description": "夸人牛逼",
-  "main": "dist/index.js",
+  "author": "YunYouJun",
+  "license": "AGPL-3.0",
   "exports": {
     ".": "./dist/index.js",
     "./options": "./dist/options.js",
     "./package.json": "./package.json"
   },
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "echo '@某人 nb'"
-  },
-  "author": "YunYouJun",
-  "license": "AGPL-3.0"
+  }
 }

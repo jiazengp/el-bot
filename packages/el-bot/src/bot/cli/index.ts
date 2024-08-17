@@ -12,8 +12,6 @@ import { aboutInfo, cleanOptions } from './utils'
 
 /**
  * 处理全局选项
- * @param options
- * @param ctx
  */
 async function processOptions(
   program: commander.Command,
@@ -42,7 +40,7 @@ export function initCli(ctx: Bot, name: string) {
   const { mirai } = ctx
 
   // modify prototype
-  Command.prototype.outputHelp = function(cb: any) {
+  Command.prototype.outputHelp = function (cb: any) {
     if (!cb) {
       cb = (passthru: any) => {
         return passthru
@@ -53,8 +51,9 @@ export function initCli(ctx: Bot, name: string) {
     if (
       cbOutput
       && (this.parent || command === 'el -h' || command === 'el --help')
-    )
+    ) {
       ctx.reply(cbOutput.trim())
+    }
   }
 
   const cli = new Command('el')
@@ -68,7 +67,7 @@ export function initCli(ctx: Bot, name: string) {
   program
     .command('restart')
     .description('重启 el-bot')
-    .action(async() => {
+    .action(async () => {
       if (ctx.user.isAllowed(undefined, true)) {
         await ctx.reply('重启 el-bot')
         shell.exec('touch package.json')
@@ -115,8 +114,10 @@ export function initCli(ctx: Bot, name: string) {
 
   mirai.on('message', (msg) => {
     // qq = msg.sender.id;
-    if (msg.plain.slice(0, name.length) !== name) return
-    if (msg.plain[name.length] !== ' ') return
+    if (msg.plain.slice(0, name.length) !== name)
+      return
+    if (msg.plain[name.length] !== ' ')
+      return
 
     try {
       const cmd = msg.plain.split(' ')

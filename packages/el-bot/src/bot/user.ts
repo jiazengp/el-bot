@@ -31,8 +31,9 @@ export default class User {
       !qq
       && this.ctx.mirai.curMsg
       && check.isChatMessage(this.ctx.mirai.curMsg)
-    )
+    ) {
       qq = this.ctx.mirai.curMsg.sender.id
+    }
 
     const allowFlag = this.isMaster(qq) || this.isAdmin(qq)
     if (!allowFlag && reply)

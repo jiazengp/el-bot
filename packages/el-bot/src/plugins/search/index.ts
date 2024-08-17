@@ -51,7 +51,7 @@ function getLinkByEngine(name: string, keyword: string) {
   }
 }
 
-export default function(ctx: Bot) {
+export default function (ctx: Bot) {
   const mirai = ctx.mirai
   mirai.on('message', (msg) => {
     const engineString = msg.plain.split(' ')[0]

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 
-const timeRegExp = new RegExp('^([0-9]+d)?([0-9]+h)?([0-9]+m)?$', 'i')
+// eslint-disable-next-line prefer-regex-literals
+const timeRegExp = new RegExp('^(\\d+d)?(\\d+h)?(\\d+m)?$', 'i')
 
 /**
  * 解析时间
@@ -10,9 +11,9 @@ export function parseTime(time: string) {
   const matches = timeRegExp.exec(time)
   if (matches) {
     return {
-      day: parseInt(matches[1]) || 0,
-      hour: parseInt(matches[2]) || 0,
-      minute: parseInt(matches[3]) || 0,
+      day: Number.parseInt(matches[1]) || 0,
+      hour: Number.parseInt(matches[2]) || 0,
+      minute: Number.parseInt(matches[3]) || 0,
     }
   }
   else {

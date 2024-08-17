@@ -6,7 +6,8 @@ import { Teach } from './teach.schema'
 
 // implement the autoloadback referenced in loki constructor
 export default async function teach(ctx: Bot, options: TeachOptions) {
-  if (!ctx.db) return
+  if (!ctx.db)
+    return
 
   const { mirai } = ctx
 
@@ -16,7 +17,7 @@ export default async function teach(ctx: Bot, options: TeachOptions) {
     .command('teach')
     .description('问答教学')
     .option('-l, --list', '当前列表')
-    .action(async(options) => {
+    .action(async (options) => {
       if (options.list)
         ctx.reply(await displayList())
     })
@@ -24,13 +25,13 @@ export default async function teach(ctx: Bot, options: TeachOptions) {
   // 检测学习关键词
   // Q: xxx
   // A: xxx
-  mirai.on('message', async(msg: MessageType.ChatMessage) => {
+  mirai.on('message', async (msg: MessageType.ChatMessage) => {
     // 私聊或被艾特时
     const qa = msg.plain.match(/Q:(.*)\nA:(.*)/)
     if (
       qa
       && (msg.type === 'FriendMessage'
-        || (msg.type === 'GroupMessage' && msg.isAt()))
+      || (msg.type === 'GroupMessage' && msg.isAt()))
     ) {
       // 没有权限时
       if (!ctx.status.getListenStatusByConfig(msg.sender, options)) {
@@ -68,7 +69,8 @@ export default async function teach(ctx: Bot, options: TeachOptions) {
       const result = await Teach.findOne({
         question: msg.plain,
       })
-      if (result) msg.reply(result.answer)
+      if (result)
+        msg.reply(result.answer)
     }
   })
 }

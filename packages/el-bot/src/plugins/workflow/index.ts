@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import type Bot from 'el-bot'
 
 /**
@@ -52,7 +52,8 @@ interface WorkflowConfig {
  */
 function createWorkflow(ctx: Bot, workflow: WorkflowConfig) {
   const mirai = ctx.mirai
-  if (!workflow.on) return
+  if (!workflow.on)
+    return
 
   if (Array.isArray(workflow.on)) {
     workflow.on.forEach((on) => {

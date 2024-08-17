@@ -1,7 +1,7 @@
 {
   "name": "memo",
-  "private": true,
   "version": "0.0.1",
+  "private": true,
   "description": "备忘录",
   "author": {
     "name": "YunYouJun",
@@ -10,8 +10,8 @@
   },
   "exports": {
     ".": {
-      "require": "./index.js",
-      "import": "./index.mjs"
+      "import": "./index.mjs",
+      "require": "./index.js"
     }
   }
 }

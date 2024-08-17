@@ -1,4 +1,5 @@
-import fs from 'fs'
+import fs from 'node:fs'
+import process from 'node:process'
 import type Bot from 'el-bot'
 import chalk from 'chalk'
 
@@ -20,10 +21,12 @@ export async function sleep(ms: number): Promise<void> {
  */
 export function statement(ctx: Bot) {
   const pkg = ctx.el.pkg
+  // eslint-disable-next-line no-console
   console.log('-----------------------------------------------')
   ctx.logger.info(`Docs: ${pkg.homepage}`)
   ctx.logger.info(`GitHub: ${pkg.repository.url}`)
   ctx.logger.info(`El-Bot Version: ${chalk.cyan(pkg.version)}`)
+  // eslint-disable-next-line no-console
   console.log('-----------------------------------------------')
 }
 

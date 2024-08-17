@@ -31,7 +31,7 @@ async function countKeyword(msg: MessageType.ChatMessage, option: ICounter) {
  * 计数器
  * @param ctx
  */
-export default async(ctx: Bot) => {
+export default async (ctx: Bot) => {
   const { mirai } = ctx
   const options = await Counter.find()
 

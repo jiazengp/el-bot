@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common'
 
 import { Bot } from 'el-bot'
 
+import consola from 'consola'
 import el from '../../config/el'
 
 @Injectable()
@@ -17,8 +18,8 @@ export class ElService implements OnModuleInit {
     Logger.debug('Bot start')
 
     // 卡片测试
-    this.bot.mirai.on('message', (msg) => {
-      console.log(msg)
+    this.bot.mirai.on('message', (msg: string) => {
+      consola.info(msg)
     })
   }
 }

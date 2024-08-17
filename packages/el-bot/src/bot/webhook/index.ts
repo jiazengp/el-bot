@@ -1,5 +1,5 @@
-import events from 'events'
-import type { Server } from 'net'
+import events from 'node:events'
+import type { Server } from 'node:net'
 import Koa from 'koa'
 import cors from '@koa/cors'
 import bodyParser from 'koa-bodyparser'
@@ -7,6 +7,7 @@ import type { Webhooks } from '@octokit/webhooks'
 import type { Bot } from '..'
 import { handleError } from '../../utils/error'
 import githubHandler from './github-handler'
+
 export interface WebhookConfig {
   /**
    * 是否启用
@@ -18,7 +19,7 @@ export interface WebhookConfig {
   /**
    * 回调函数
    */
-  callback?: (webhook: any) => {}
+  callback?: (webhook: any) => void
 }
 
 /**
@@ -43,7 +44,7 @@ export default class Webhook {
   middleware: (
     request: any,
     response: any,
-    next?: Function | undefined
+    next?: Koa.Next
   ) => Promise<any>
 
   constructor(public ctx: Bot) {
@@ -56,7 +57,6 @@ export default class Webhook {
 
   /**
    * 启动 webhhook
-   * @param cb
    */
   start(config?: WebhookConfig) {
     if (config)
@@ -120,7 +120,7 @@ export default class Webhook {
    * @param type 类型
    * @param callback 回调函数
    */
-  on(type: string, callback: Function) {
+  on(type: string, callback: (data: any, res: any) => void) {
     // data 为解析后的参数
     // res 为返回信息
     this.emitter.on(type, (data, res) => {

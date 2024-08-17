@@ -1,4 +1,4 @@
-import type { Bot, Context } from 'koishi'
+import type { Context } from 'koishi'
 import { segment } from 'koishi'
 import dayjs from 'dayjs'
 
@@ -12,14 +12,15 @@ export interface JrmsnOptions {
  * 随机选中一位群友担任今日美少女
  * @param ctx
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line unused-imports/no-unused-vars
 export function apply(ctx: Context, options: JrmsnOptions) {
   const msnMap = new Map<string, {
     lastUpdated: string
-    member: Bot.GuildMember
+    // member: Bot.GuildMember
+    member: { userId: string }
   }>()
 
-  ctx.middleware(async(session, next) => {
+  ctx.middleware(async (session, next) => {
     if (session.content === '今日美少女' && session.guildId) {
       const list = await session.bot.getGuildMemberList(session.guildId)
       const today = dayjs().format('YYYY-MM-DD')

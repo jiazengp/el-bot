@@ -1,6 +1,6 @@
 import type Bot from 'el-bot'
 
-export default function(ctx: Bot) {
+export default function (ctx: Bot) {
   const mirai = ctx.mirai
 
   mirai.on('message', (msg) => {

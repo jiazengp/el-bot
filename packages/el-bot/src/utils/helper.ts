@@ -16,7 +16,8 @@ export class InnerMode {
   friendSet = new Set()
   groupSet = new Set()
   constructor(msg?: MessageType.ChatMessage) {
-    if (msg) this.msg = msg
+    if (msg)
+      this.msg = msg
   }
 
   setMsg(msg: MessageType.ChatMessage) {
@@ -28,7 +29,8 @@ export class InnerMode {
    */
   enter() {
     const msg = this.msg
-    if (!msg) return
+    if (!msg)
+      return
     if (msg.type === 'FriendMessage')
       this.friendSet.add(msg.sender.id)
     else if (msg.type === 'GroupMessage')
@@ -41,7 +43,8 @@ export class InnerMode {
    */
   getStatus() {
     const msg = this.msg
-    if (!msg) return
+    if (!msg)
+      return
     if (msg.type === 'FriendMessage')
       return this.friendSet.has(msg.sender.id)
     else if (msg.type === 'GroupMessage')
@@ -53,7 +56,8 @@ export class InnerMode {
    */
   exit() {
     const msg = this.msg
-    if (!msg) return
+    if (!msg)
+      return
     if (msg.type === 'FriendMessage')
       this.friendSet.delete(msg.sender.id)
     else if (msg.type === 'GroupMessage')

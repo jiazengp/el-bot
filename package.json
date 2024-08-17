@@ -1,19 +1,20 @@
 {
+  "type": "module",
   "private": true,
-  "repository": "https://github.com/YunYouJun/el-bot",
   "author": {
     "name": "云游君",
     "email": "me@yunyoujun.cn",
     "url": "https://www.yunyoujun.cn"
   },
   "license": "AGPL-3.0",
-  "engines": {
-    "node": ">=12.0.0"
-  },
+  "homepage": "https://docs.bot.elpsy.cn/",
+  "repository": "https://github.com/YunYouJun/el-bot",
   "bugs": {
     "url": "https://github.com/YunYouJun/el-bot/issues"
   },
-  "homepage": "https://docs.bot.elpsy.cn/",
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "ecosystem": {
     "el-bot-api": "https://github.com/ElpsyCN/el-bot-api",
     "el-bot-plugins": "https://github.com/ElpsyCN/el-bot-plugins",
@@ -33,41 +34,44 @@
     "dev:lib": "pnpm run dev -C packages/el-bot",
     "docs:dev": "npm run dev -C docs",
     "docs:build": "pnpm run build -C docs",
-    "lint": "eslint \"**/*.{ts,js}\"",
+    "lint": "eslint .",
     "lint:fix": "eslint \"**/*.{ts,js}\" --fix",
     "cqhttp": "cd go-cqhttp && ./go-cqhttp faststart",
     "cqhttp:update": "cd go-cqhttp && ./go-cqhttp update",
     "start": "pnpm run start:demo",
     "start:demo": "pnpm start -C demo",
     "prepare": "husky install",
-    "typecheck": "cd packages/el-bot && tsc --noEmit"
-  },
-  "lint-staged": {
-    "*.{js,ts}": [
-      "eslint --fix"
-    ]
-  },
-  "devDependencies": {
-    "@antfu/eslint-config-ts": "^0.18.9",
-    "@types/node": "^17.0.23",
-    "eslint": "^8.12.0",
-    "esno": "^0.14.1",
-    "husky": "7.0.4",
-    "koishi-core": "^3.14.2",
-    "lint-staged": "^12.3.7",
-    "nodemon": "^2.0.15",
-    "npm-run-all": "^4.1.5",
-    "ts-loader": "^9.2.8",
-    "ts-node": "^10.7.0",
-    "ts-node-dev": "^1.1.8",
-    "typescript": "^4.6.3"
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "koishi-core": "^3.14.2"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.26.0",
+    "@antfu/eslint-config-ts": "^0.18.9",
+    "@types/node": "^17.0.45",
+    "@unocss/eslint-plugin": "^0.62.2",
+    "eslint": "^9.9.0",
+    "eslint-plugin-format": "^0.1.2",
+    "esno": "^4.7.0",
+    "husky": "7.0.4",
+    "koishi-core": "^3.14.2",
+    "lint-staged": "^12.5.0",
+    "nodemon": "^2.0.22",
+    "npm-run-all": "^4.1.5",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.4"
   },
   "pnpm": {
     "overrides": {
       "el-bot": "workspace:*"
     }
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix"
+    ]
   }
 }

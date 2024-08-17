@@ -1,6 +1,7 @@
-import type { Server } from 'net'
-import fs from 'fs'
-import { resolve } from 'path'
+import process from 'node:process'
+import type { Server } from 'node:net'
+import fs from 'node:fs'
+import { resolve } from 'node:path'
 import type {
   Api,
   MessageType,
@@ -13,6 +14,7 @@ import {
 import chalk from 'chalk'
 import type commander from 'commander'
 import type mongoose from 'mongoose'
+import consola from 'consola'
 import type { ElConfig, ElUserConfig } from '../config/el'
 import { resolveElConfig } from '../config/el'
 
@@ -116,7 +118,8 @@ export class Bot {
       this.logger.error = (...args: any) => {
         const target = this.el.report?.target || {}
         if (this.el.bot.devGroup) {
-          if (target?.group) target.group.push(this.el.bot.devGroup)
+          if (target?.group)
+            target.group.push(this.el.bot.devGroup)
           else target.group = [this.el.bot.devGroup]
         }
         this.sender.sendMessageByConfig(args.join(' '), target)
@@ -156,13 +159,14 @@ export class Bot {
 
   /**
    * 启动机器人
-   * @param callback 回调函数
    */
   async start() {
-    if (!this.isDev) statement(this)
+    if (!this.isDev)
+      statement(this)
 
     // 连接数据库
-    if (this.el.db?.enable) await connectDb(this, this.el.db)
+    if (this.el.db?.enable)
+      await connectDb(this, this.el.db)
 
     // 链接 QQ
     if (!this.el.qq) {
@@ -211,10 +215,11 @@ export class Bot {
           resolve((this.isTS ? 'dist/' : '') + this.el.bot.pluginDir, path),
         )
       }
-      catch (e) {
+      catch (e: any) {
         this.logger.error(
           `无法加载 plugins ${this.el.bot.pluginDir} 目录，请检查 'bot.pluginDir' 配置`,
         )
+        consola.error(e)
       }
     }
 
@@ -265,7 +270,9 @@ export class Bot {
   use(plugin: Plugin | PluginInstallFunction, ...options: any[]) {
     const installedPlugins = this.installedPlugins
     if (installedPlugins.has(plugin)) {
-      this.isDev && this.logger.warn('插件已经被安装')
+      if (this.isDev) {
+        this.logger.warn('插件已经被安装')
+      }
     }
     else if (plugin && isFunction(plugin)) {
       installedPlugins.add(plugin)
@@ -276,7 +283,7 @@ export class Bot {
       plugin.install(this, ...options)
     }
     else if (this.isDev) {
-      console.log(plugin)
+      consola.info(plugin)
       this.logger.warn('插件必须是一个函数，或是带有 "install" 属性的对象。')
     }
     return this
@@ -291,8 +298,8 @@ export class Bot {
   plugin(name: string, plugin: Plugin | PluginInstallFunction, ...options: any[]) {
     const addedPlugin = isFunction(plugin)
       ? {
-        install: plugin,
-      }
+          install: plugin,
+        }
       : plugin
 
     this.plugins.add(name, addedPlugin, ...options)

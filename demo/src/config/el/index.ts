@@ -1,4 +1,5 @@
-import path from 'path'
+import path from 'node:path'
+import process from 'node:process'
 import dotenv from 'dotenv'
 import { defineConfig } from 'el-bot'
 import botConfig from './bot'
@@ -8,7 +9,7 @@ dotenv.config({
 })
 
 export default defineConfig({
-  qq: parseInt(process.env.BOT_QQ || ''),
+  qq: Number.parseInt(process.env.BOT_QQ || ''),
   setting: './mcl/config/net.mamoe.mirai-api-http/setting.yml',
   db: {
     enable: process.env.EL_DB_ENABLE === 'true',

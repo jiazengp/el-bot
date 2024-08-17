@@ -1,7 +1,7 @@
 {
   "name": "rss",
-  "private": true,
   "version": "0.0.2",
+  "private": true,
   "description": "订阅 RSS 信息",
   "author": {
     "name": "YunYouJun",
@@ -10,8 +10,8 @@
   },
   "exports": {
     ".": {
-      "require": "./index.js",
-      "import": "./index.mjs"
+      "import": "./index.mjs",
+      "require": "./index.js"
     }
   }
 }

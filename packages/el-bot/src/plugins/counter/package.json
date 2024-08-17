@@ -1,7 +1,7 @@
 {
   "name": "counter",
-  "private": true,
   "version": "0.0.1",
+  "private": true,
   "description": "计数器",
   "el-bot": {
     "db": true
@@ -13,8 +13,8 @@
   },
   "exports": {
     ".": {
-      "require": "./index.js",
-      "import": "./index.mjs"
+      "import": "./index.mjs",
+      "require": "./index.js"
     }
   }
 }

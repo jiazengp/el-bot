@@ -1,13 +1,14 @@
-import { spawn } from 'child_process'
-import fs from 'fs'
-import os from 'os'
-import { resolve } from 'path'
+import { spawn } from 'node:child_process'
+import fs from 'node:fs'
+import { resolve } from 'node:path'
+import process from 'node:process'
 import type commander from 'commander'
-import glob from 'glob'
 import { Logger } from '@yunyoujun/logger'
 import shell from 'shelljs'
 import { utils } from 'el-bot'
+
 // 实例目录下的 package.json
+// eslint-disable-next-line ts/no-require-imports
 const pkg = require(getAbsolutePath('./package.json'))
 
 const logger = new Logger({ prefix: '[cli(start)]' })
@@ -20,7 +21,7 @@ function getAbsolutePath(file: string) {
   return resolve(process.cwd(), file)
 }
 
-export default async function(cli: commander.Command) {
+export default async function (cli: commander.Command) {
   /**
    * 启动机器人
    */
@@ -57,32 +58,8 @@ export default async function(cli: commander.Command) {
       logger.error('mcl 目录不存在')
     }
 
-    glob('./mcl', {}, (err, files) => {
-      if (err)
-        logger.error(err)
-
-      if (files[0]) {
-        const platform = os.platform()
-        try {
-          const miraiConsole = spawn(
-            platform === 'win32' ? 'mcl.cmd' : './mcl',
-            [],
-            {
-              stdio: ['pipe', 'inherit', 'inherit'],
-            },
-          )
-          process.stdin.pipe(miraiConsole.stdin)
-        }
-        catch (err) {
-          utils.handleError(err, logger)
-        }
-      }
-      else {
-        logger.error(
-          '请下载官方启动器 [mirai-console-loader](https://github.com/iTXTech/mirai-console-loader)。',
-        )
-      }
-    })
+    // remove mcl
+    // glob('./mcl', {})
   }
 
   // 启动

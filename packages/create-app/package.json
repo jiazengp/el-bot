@@ -2,23 +2,25 @@
   "name": "@el-bot/create-app",
   "version": "0.0.3",
   "description": "Create El Bot",
-  "bin": {
-    "create-app": "index.js",
-    "cea": "index.js"
-  },
-  "main": "index.js",
   "author": {
     "name": "云游君",
     "email": "me@yunyoujun.cn",
     "url": "https://www.yunyoujun.cn"
   },
-  "homepage": "https://github.com/YunYouJun/el-bot/blob/dev/packages/create-app#readme",
   "license": "AGPL-3.0",
-  "dependencies": {
-    "chalk": "^5.0.1",
-    "enquirer": "^2.3.6"
+  "homepage": "https://github.com/YunYouJun/el-bot/blob/dev/packages/create-app#readme",
+  "main": "index.js",
+  "bin": {
+    "create-el-bot": "dist/index.js"
   },
   "scripts": {
-    "build": "echo 'Do not need build.'"
+    "build": "tsup"
+  },
+  "dependencies": {
+    "enquirer": "^2.4.1",
+    "picocolors": "^1.0.1"
+  },
+  "devDependencies": {
+    "tsup": "^5.12.9"
   }
 }

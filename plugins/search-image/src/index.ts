@@ -17,7 +17,8 @@ interface SearchImageOptions {
  * @param result 格式化结果
  */
 function formatResult(result: sagiri.SagiriResult): MessageType.MessageChain {
-  if (!result) return []
+  if (!result)
+    return []
   const msgChain = [
     Message.Plain('\n------------------\n'),
     Message.Image(null, result.thumbnail),
@@ -31,8 +32,6 @@ function formatResult(result: sagiri.SagiriResult): MessageType.MessageChain {
 
 /**
  * 搜图 [SauceNAO](https://saucenao.com/)
- * @param ctx
- * @param config
  */
 export default async function searchImage(
   ctx: Bot,
@@ -52,7 +51,7 @@ export default async function searchImage(
     }
 
     if (innerMode.getStatus()) {
-      msg.messageChain.forEach(async(singleMessage) => {
+      msg.messageChain.forEach(async (singleMessage) => {
         if (singleMessage.type === 'Image' && singleMessage.url) {
           let replyContent: MessageType.MessageChain = []
 
@@ -81,7 +80,8 @@ export default async function searchImage(
           catch (err: any) {
             if (err) {
               utils.handleError(err)
-              err.message && ctx.logger.error('[search-image]', err.message)
+              if (err.message)
+                ctx.logger.error('[search-image]', err.message)
             }
           }
         }

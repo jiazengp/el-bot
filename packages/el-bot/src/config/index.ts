@@ -1,5 +1,6 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
 import { createLogger } from '../bot/logger'
 import type { BotConfig, BotUserConfig } from './bot'
 import type { ElUserConfig } from './el'

@@ -1,17 +1,17 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "baseUrl": ".",
-    "outDir": "./dist",
+    "module": "commonjs",
     "paths": {
       "el-bot": ["../el-bot/src/index.ts"]
-    }
+    },
+    "declaration": true,
+    "outDir": "./dist",
+    "removeComments": true,
+    "esModuleInterop": true
   },
   "include": ["src/**/*.ts", "**/*/package.json", "src/plugins/**/*"],
   "exclude": ["dist", "node_modules", "test", "**/*spec.ts"]

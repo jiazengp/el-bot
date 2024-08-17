@@ -1,12 +1,14 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 /* eslint-env node */
 
-const fs = require('fs')
-const path = require('path')
-const { exec } = require('child_process')
-const { prompt } = require('enquirer')
-const { yellow, blue } = require('chalk')
+import fs from 'node:fs'
+import path from 'node:path'
+import { exec } from 'node:child_process'
+import process from 'node:process'
+import { prompt } from 'enquirer'
+import c from 'picocolors'
 
 const argv = process.argv.slice(2)
 
@@ -16,21 +18,24 @@ const templateUrl = 'https://github.com/elpsycn/el-bot-template'
 const TEMPLATES = [
   {
     name: 'ts',
-    message: blue('TypeScript'),
+    message: c.blue('TypeScript'),
   },
   {
     name: 'js',
-    message: yellow('JavaScript'),
+    message: c.yellow('JavaScript'),
   },
 ]
 
-const renameFiles = {
+const renameFiles: Record<string, string> = {
   _gitignore: '.gitignore',
 }
 
 async function init() {
   let targetDir = argv[0]
-  const answers = await prompt([
+  const answers = await prompt<{
+    type: 'ts' | 'js'
+    name: string
+  }>([
     {
       type: 'select',
       name: 'type',
@@ -58,7 +63,9 @@ async function init() {
       /**
        * @type {{ yes: boolean }}
        */
-      const { yes } = await prompt({
+      const { yes } = await prompt<{
+        yes: boolean
+      }>({
         type: 'confirm',
         name: 'yes',
         initial: 'Y',
@@ -83,9 +90,9 @@ async function init() {
       break
   }
 
-  function generateTemplate() {
-    const templateDir = path.join(__dirname, `template-${answers.type}`)
-    const write = (file, content) => {
+  async function generateTemplate() {
+    const templateDir = path.join(__dirname, `../template-${answers.type}`)
+    const write = (file: string, content?: string) => {
       const targetPath = renameFiles[file]
         ? path.join(root, renameFiles[file])
         : path.join(root, file)
@@ -100,7 +107,7 @@ async function init() {
       write(file)
 
     // 替换 package.json name
-    const pkg = require(path.join(templateDir, 'package.json'))
+    const pkg = await import(path.join(templateDir, 'package.json'))
     pkg.name = path.basename(root)
     write('package.json', JSON.stringify(pkg, null, 2))
   }
@@ -114,7 +121,7 @@ async function init() {
   console.log()
 }
 
-function copy(src, dest) {
+function copy(src: string, dest: string) {
   const stat = fs.statSync(src)
   if (stat.isDirectory())
     copyDir(src, dest)
@@ -122,7 +129,7 @@ function copy(src, dest) {
     fs.copyFileSync(src, dest)
 }
 
-function copyDir(srcDir, destDir) {
+function copyDir(srcDir: string, destDir: string) {
   fs.mkdirSync(destDir, { recursive: true })
   for (const file of fs.readdirSync(srcDir)) {
     const srcFile = path.resolve(srcDir, file)
@@ -131,7 +138,7 @@ function copyDir(srcDir, destDir) {
   }
 }
 
-function emptyDir(dir) {
+function emptyDir(dir: string) {
   if (!fs.existsSync(dir))
     return
 

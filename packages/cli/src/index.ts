@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { spawn } from 'child_process'
+import { spawn } from 'node:child_process'
+import process from 'node:process'
 import { Command } from 'commander'
 import pkg from '../package.json'
 import registerInstallCommand from './install'

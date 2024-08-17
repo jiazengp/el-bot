@@ -12,12 +12,12 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ["14", "16"]
+        node-version: ['14', '16']
         include:
-          - node-version: "14"
-            node-name: "LTS"
-          - node-version: "16"
-            node-name: "Latest"
+          - node-version: '14'
+            node-name: LTS
+          - node-version: '16'
+            node-name: Latest
 
     steps:
       - uses: actions/checkout@v2

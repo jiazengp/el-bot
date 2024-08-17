@@ -1,7 +1,6 @@
+import process from 'node:process'
 import { Injectable, Logger } from '@nestjs/common'
 import { App } from 'koishi'
-
-import AdapterOnebot from '@koishijs/plugin-adapter-onebot'
 
 import * as Forward from '@koishijs/plugin-forward'
 import * as Repeater from '@koishijs/plugin-repeater'
@@ -10,11 +9,15 @@ import * as Repeater from '@koishijs/plugin-repeater'
 import * as Respondent from '@koishijs/plugin-respondent'
 
 // custom plugin
+import consola from 'consola'
 import * as ping from './plugins/ping'
 // config
 import * as config from './config'
 import type { PluginOptions } from './config'
 
+/**
+ * @deprecated
+ */
 @Injectable()
 export class KoishiService {
   private app: App
@@ -27,14 +30,8 @@ export class KoishiService {
   // app.start()
 
   init(app: App) {
-    // 安装 onebot 适配器插件，并配置机器人
-    app.plugin(AdapterOnebot, {
-      protocol: 'ws',
-      selfId: config.selfId,
-      endpoint: 'ws://127.0.0.1:6700',
-    })
-
     config.commonPlugins.forEach((item) => {
+      // @ts-expect-error type
       app.plugin(item)
     })
 
@@ -51,7 +48,7 @@ export class KoishiService {
       this.logger.debug('Start Koishi Bot')
     }
     catch (e) {
-      console.log(e)
+      consola.error(e)
       this.logger.error('Some Error')
     }
 

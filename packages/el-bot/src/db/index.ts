@@ -4,7 +4,8 @@ import type { dbConfig } from '../config/el'
 import { analytics } from './analytics'
 
 export async function connectDb(bot: Bot, dbConfig: dbConfig): Promise<void> {
-  if (!dbConfig.enable) return
+  if (!dbConfig.enable)
+    return
 
   const uri = dbConfig.uri || 'mongodb://localhost:27017/el-bot'
 
@@ -23,7 +24,8 @@ export async function connectDb(bot: Bot, dbConfig: dbConfig): Promise<void> {
     bot.logger.success(`${dbName}连接成功`)
   })
 
-  if (!db) return
+  if (!db)
+    return
 
   // 分析统计
   if (dbConfig.analytics)

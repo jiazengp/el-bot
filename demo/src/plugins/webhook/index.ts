@@ -1,8 +1,9 @@
 import type Bot from 'el-bot'
+import consola from 'consola'
 
-export default function(ctx: Bot) {
+export default function (ctx: Bot) {
   ctx.webhook?.on('ok', (data: any) => {
-    console.log('Get type OK!')
-    console.log(data)
+    consola.info('Get type OK!')
+    consola.info(data)
   })
 }

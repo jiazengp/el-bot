@@ -8,10 +8,10 @@ import { Memo } from './memo.schema'
 
 /**
  * 初始化 collection
- * @param db
  */
 async function initCollection(ctx: Bot) {
-  if (!ctx.db) return
+  if (!ctx.db)
+    return
   const memos = await Memo.find({
     $or: [
       {
@@ -122,8 +122,6 @@ function initCli(ctx: Bot) {
 /**
  * 初始化定时器
  * @param ctx
- * @param time
- * @param content
  */
 function addSchedule(ctx: Bot, memo: IMemo) {
   const { mirai } = ctx
@@ -138,7 +136,7 @@ function addSchedule(ctx: Bot, memo: IMemo) {
   })
 }
 
-export default function(ctx: Bot) {
+export default function (ctx: Bot) {
   if (!ctx.db) {
     ctx.logger.warning(
       '[memo] 因为你尚未开启数据库，备注信息将会在机器人重启后丢失。',

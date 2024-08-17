@@ -1,7 +1,7 @@
 {
   "name": "limit",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
   "description": "限制消息频率",
   "author": {
     "name": "YunYouJun",
@@ -10,8 +10,8 @@
   },
   "exports": {
     ".": {
-      "require": "./index.js",
-      "import": "./index.mjs"
+      "import": "./index.mjs",
+      "require": "./index.js"
     }
   }
 }

@@ -1,3 +1,4 @@
+import process from 'node:process'
 import type { JrmsnOptions } from '../plugins/jrmsn'
 
 export * as respondent from './respondent'

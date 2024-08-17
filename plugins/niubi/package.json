@@ -2,11 +2,13 @@
   "name": "@el-bot/plugin-niubi",
   "version": "0.3.1",
   "description": "夸人牛逼",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "author": "YunYouJun",
+  "license": "AGPL-3.0",
   "exports": {
     ".": "./dist/index.js"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -15,8 +17,6 @@
     "build": "tsup",
     "test": "echo '@某人 nb'"
   },
-  "author": "YunYouJun",
-  "license": "AGPL-3.0",
   "devDependencies": {
     "el-bot": "workspace:*"
   }

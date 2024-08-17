@@ -84,7 +84,7 @@ export default function limit(ctx: Bot, options: LimitOptions) {
   // 只限制群消息
   const sendGroupMessage = mirai.api.sendGroupMessage
 
-  mirai.api.sendGroupMessage = async(messageChain, target, quote) => {
+  mirai.api.sendGroupMessage = async (messageChain, target, quote) => {
     let data = {
       code: -1,
       msg: 'fail',
@@ -92,7 +92,8 @@ export default function limit(ctx: Bot, options: LimitOptions) {
     }
 
     const isMax = await isMaxCountForSender()
-    if (isMax) return data
+    if (isMax)
+      return data
 
     if (!isLimited()) {
       count += 1

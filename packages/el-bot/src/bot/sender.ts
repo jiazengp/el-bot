@@ -1,4 +1,5 @@
 import type { MessageType } from 'mirai-ts'
+import consola from 'consola'
 import type * as Config from '../types/config'
 import type { Bot } from './index'
 
@@ -17,7 +18,7 @@ export default class Sender {
   ) {
     const mirai = this.ctx.mirai
     return Promise.all(
-      array.map(async(qq) => {
+      array.map(async (qq) => {
         const { messageId } = await mirai.api.sendFriendMessage(
           messageChain,
           qq,
@@ -67,7 +68,7 @@ export default class Sender {
 
     if (target.group) {
       await Promise.all(
-        target.group.map(async(qq: number) => {
+        target.group.map(async (qq: number) => {
           const { messageId } = await mirai.api.sendGroupMessage(
             messageChain,
             qq,
@@ -85,8 +86,9 @@ export default class Sender {
           messageList,
         )
       }
-      catch (err) {
+      catch (err: any) {
         this.ctx.logger.error('发送失败：可能是由于 mirai 私聊暂不支持长文本')
+        consola.error(err)
       }
     }
 

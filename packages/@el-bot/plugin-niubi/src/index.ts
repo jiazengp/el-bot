@@ -11,14 +11,14 @@ async function getRandomSentence(url: string, name: string) {
   return sentence
 }
 
-export default function(ctx: Bot, options: NiubiOptions) {
+export default function (ctx: Bot, options: NiubiOptions) {
   const { mirai } = ctx
 
   // 覆盖默认配置
   mirai.on('message', (msg) => {
     let name = '我'
 
-    options.match.forEach(async(option) => {
+    options.match.forEach(async (option) => {
       const str = check.match(msg.plain.toLowerCase(), option)
       if (!str)
         return
@@ -30,6 +30,7 @@ export default function(ctx: Bot, options: NiubiOptions) {
           name = `「${singleMessage.display.slice(1)}」`
           return true
         }
+        return false
       })
 
       const sentence = await getRandomSentence(options.url, name)
@@ -38,7 +39,7 @@ export default function(ctx: Bot, options: NiubiOptions) {
   })
 
   // 进群时
-  mirai.on('MemberJoinEvent', async(msg) => {
+  mirai.on('MemberJoinEvent', async (msg) => {
     const sentence = await getRandomSentence(
       options.url,
       msg.member.memberName,

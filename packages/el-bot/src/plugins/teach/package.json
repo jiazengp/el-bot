@@ -1,7 +1,7 @@
 {
   "name": "teach",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
   "description": "问答学习",
   "el-bot": {
     "db": true
@@ -13,8 +13,8 @@
   },
   "exports": {
     ".": {
-      "require": "./index.js",
-      "import": "./index.mjs"
+      "import": "./index.mjs",
+      "require": "./index.js"
     }
   }
 }

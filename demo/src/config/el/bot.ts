@@ -1,4 +1,5 @@
 import { defineBotConfig } from 'el-bot'
+
 export default defineBotConfig({
   'name': '嘿',
   'autoloadPlugins': true,
@@ -47,6 +48,7 @@ export default defineBotConfig({
   'report': [
     {
       type: 'jdy-report',
+      // eslint-disable-next-line no-template-curly-in-string
       content: '简道云每日填报情况：${data.msg}',
       target: {
         group: [120117362],

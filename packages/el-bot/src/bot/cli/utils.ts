@@ -15,7 +15,6 @@ export function aboutInfo(pkg: any) {
 
 /**
  * 清理全局选项
- * @param options
  */
 export function cleanOptions(program: commander.Command) {
   const options = program.opts()
@@ -30,8 +29,9 @@ export function cleanOptions(program: commander.Command) {
         if (
           option.defaultValue
           && (option.long === `--${key}` || option.short === `-${key}`)
-        )
+        ) {
           options[key] = option.defaultValue
+        }
       })
     }
   })

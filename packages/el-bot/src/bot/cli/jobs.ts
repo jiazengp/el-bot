@@ -66,7 +66,7 @@ export function initProgram(ctx: Bot, options: CliOptions, qq: number) {
   program
     .command('jobs')
     .description('任务列表')
-    .action(async() => {
+    .action(async () => {
       if (!ctx.user.isAllowed(qq, true))
         return
 
@@ -82,7 +82,7 @@ export function initProgram(ctx: Bot, options: CliOptions, qq: number) {
   program
     .command('run <name>')
     .description('运行自定义任务')
-    .action(async(name: string) => {
+    .action(async (name: string) => {
       if (!ctx.user.isAllowed(qq, true))
         return
 

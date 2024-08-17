@@ -23,25 +23,27 @@ function recallByList(
   allMessageList: AllMessageList,
 ) {
   if (allMessageList && msg.messageId in allMessageList) {
-    allMessageList[msg.messageId].map((messageId: number) => {
+    allMessageList[msg.messageId].forEach((messageId: number) => {
+      // @ts-expect-error null
       mirai.api.recall(messageId)
     })
     allMessageList[msg.messageId] = []
   }
 }
 
-export default function(ctx: Bot, options: ForwardOptions) {
+export default function (ctx: Bot, options: ForwardOptions) {
   const mirai = ctx.mirai
   /**
    * 原消息和被转发的各消息 Id 关系列表
    */
   const allMessageList: AllMessageList = {}
-  mirai.on('message', async(msg: MessageType.ChatMessage) => {
-    if (!msg.sender || !msg.messageChain) return
+  mirai.on('message', async (msg: MessageType.ChatMessage) => {
+    if (!msg.sender || !msg.messageChain)
+      return
 
     if (options) {
       await Promise.all(
-        options.map(async(item: ForwardItem) => {
+        options.map(async (item: ForwardItem) => {
           const canForward = ctx.status.getListenStatusByConfig(
             msg.sender,
             item,

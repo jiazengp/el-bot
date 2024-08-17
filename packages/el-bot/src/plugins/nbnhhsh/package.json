@@ -1,7 +1,7 @@
 {
   "name": "nbnhhsh",
-  "private": true,
   "version": "0.0.3",
+  "private": true,
   "description": "能不能好好说话？",
   "author": {
     "name": "YunYouJun",
@@ -10,8 +10,8 @@
   },
   "exports": {
     ".": {
-      "require": "./index.js",
-      "import": "./index.mjs"
+      "import": "./index.mjs",
+      "require": "./index.js"
     }
   }
 }

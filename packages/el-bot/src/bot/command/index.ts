@@ -1,5 +1,6 @@
 import type Bot from 'el-bot'
 import { check } from 'mirai-ts'
+import consola from 'consola'
 import { getHelpContent } from './utils'
 
 /**
@@ -18,7 +19,7 @@ export class Command {
    * 回调函数
    */
   callback = (options: string[]) => {
-    console.log(options)
+    consola.info(options)
   }
 
   children = new Map<string, Command>()

@@ -1,5 +1,6 @@
-import fs from 'fs'
-import { resolve } from 'path'
+import fs from 'node:fs'
+import { resolve } from 'node:path'
+import process from 'node:process'
 import type { MiraiApiHttpSetting } from 'mirai-ts'
 import { mergeConfig, parseYaml } from '../utils/config'
 import type { WebhookConfig } from '../bot/webhook'
@@ -20,7 +21,7 @@ export interface dbConfig {
   /**
    * 是否进行统计分析
    */
-  analytics?: Boolean
+  analytics?: boolean
 }
 
 /**
@@ -39,7 +40,7 @@ export interface reportConfig {
 
 const pkg = JSON.parse(fs.readFileSync(resolve(process.cwd(), 'package.json'), 'utf-8'))
 
-export interface ElConfig<T=BotConfig> {
+export interface ElConfig<T = BotConfig> {
   /**
    * 机器人 QQ
    */
@@ -148,7 +149,7 @@ export function resolveElConfig(userConfig: ElUserConfig) {
   // 合并
   const config = mergeConfig(defaultElConfig, userConfig) as ElConfig
   if (typeof config.qq === 'string')
-    config.qq = parseInt(config.qq)
+    config.qq = Number.parseInt(config.qq)
 
   config.pkg = pkg
   config.path.image = resolve(config.base, config.mirai.folder, `${assetsFolder}/images`)

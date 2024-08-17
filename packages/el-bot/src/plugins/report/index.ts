@@ -17,7 +17,7 @@ interface ReportOptions {
   content: string
 }
 
-export default function(ctx: Bot, options: ReportOptions[] = []) {
+export default function (ctx: Bot, options: ReportOptions[] = []) {
   if (!ctx.webhook) {
     ctx.logger.error('[report] 您须先开启 webhook')
     return

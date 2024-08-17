@@ -2,8 +2,6 @@ import { isDev } from './misc'
 
 /**
  * 通用的异常处理
- * @param e
- * @param logger
  */
 export function handleError(
   e: any | Error,
@@ -11,7 +9,8 @@ export function handleError(
     error: (...args: any[]) => void
   },
 ) {
-  if (!e) return
+  if (!e)
+    return
 
   if (isDev)
     console.error(e)

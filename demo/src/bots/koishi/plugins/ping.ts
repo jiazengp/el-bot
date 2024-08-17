@@ -4,7 +4,7 @@ export const name = 'ping'
 
 export function apply(ctx: Context) {
   // 如果收到“天王盖地虎”，就回应“宝塔镇河妖”
-  ctx.middleware(async(session, next) => {
+  ctx.middleware(async (session, next) => {
     const replyMap: Record<string, string> = {
       '(': ')',
       '（': '）',

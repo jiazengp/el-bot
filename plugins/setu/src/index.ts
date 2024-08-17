@@ -1,4 +1,3 @@
-
 import { Message, check } from 'mirai-ts'
 import axios from 'axios'
 import { utils } from 'el-bot'
@@ -48,14 +47,14 @@ function getRandomImage(image: SetuImage[]) {
  * @param {Bot} ctx
  * @param {SetuOptions} options
  */
-export default function(ctx: Bot, options: SetuOptions) {
+export default function (ctx: Bot, options: SetuOptions) {
   const mirai = ctx.mirai
   utils.config.merge(setu, options)
 
   let image: any
   if (setu.url) {
     mirai.on('message', (msg) => {
-      setu.match.forEach(async(obj) => {
+      setu.match.forEach(async (obj) => {
         if (check.match(msg.plain.toLowerCase(), obj)) {
           if (setu.reply)
             msg.reply(setu.reply)
@@ -63,15 +62,17 @@ export default function(ctx: Bot, options: SetuOptions) {
           if (utils.isUrl(setu.url)) {
             const { data } = await axios.get(setu.url)
             image = data
-            if (!image.url) image = data.data[0]
+            if (!image.url)
+              image = data.data[0]
           }
           else {
-            const setuJson: any = await require(setu.url)
+            const setuJson: any = await import(setu.url)
             image = getRandomImage(setuJson.image)
           }
 
           // 图片链接设置代理
-          if (setu.proxy) image.url = setu.proxy + image.url
+          if (setu.proxy)
+            image.url = setu.proxy + image.url
           msg.reply([Message.Image('', image.url)])
         }
       })

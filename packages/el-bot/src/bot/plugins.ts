@@ -1,5 +1,7 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
+import consola from 'consola'
 import { merge } from '../utils/config'
 import { isFunction } from '../shared'
 import { handleError } from '../utils/error'
@@ -78,12 +80,11 @@ export class Plugins {
   /**
    * 加载对应类型插件
    * @param type 插件类型 default | custom
-   * @param path 所在路径
    */
   load(type: PluginType) {
     const botConfig = this.ctx.el.bot!
     if (botConfig.plugins && botConfig.plugins[type]) {
-      botConfig.plugins[type]?.forEach(async(name: string) => {
+      botConfig.plugins[type]?.forEach(async (name: string) => {
         const pkgName = this.getPluginFullName(name, type)
 
         try {
@@ -103,10 +104,12 @@ export class Plugins {
           }
           catch (e) {
             this.ctx.logger.warning(`${name} 插件没有相关描述信息`)
+            consola.error(e)
           }
 
           if (plugin) {
-            if (pkg) plugin.pkg = pkg
+            if (pkg)
+              plugin.pkg = pkg
 
             this[type].add({
               name: name || pkgName,
@@ -143,7 +146,6 @@ export class Plugins {
    * @param name 插件名
    * @param plugin 插件函数
    * @param options 默认配置
-   * @param pkg 插件 package.json
    */
   add(name: string, plugin: Plugin, options?: any) {
     const ctx = this.ctx

@@ -7,7 +7,7 @@ import type { TestOptions } from './options'
 export default (ctx: Bot, options: TestOptions) => {
   const { mirai } = ctx
   ctx.logger.info(options)
-  mirai.on('message', async(msg) => {
+  mirai.on('message', async (msg) => {
     ctx.logger.info(msg)
     if (msg.plain === 'test')
       msg.reply('Link Start!')

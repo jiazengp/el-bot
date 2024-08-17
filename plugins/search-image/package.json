@@ -1,7 +1,7 @@
 {
   "name": "@el-bot/plugin-search-image",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
   "description": "以图搜图",
   "author": {
     "name": "YunYouJun",
@@ -10,6 +10,6 @@
   },
   "license": "AGPL-3.0",
   "dependencies": {
-    "sagiri": "^3.1.1"
+    "sagiri": "^3.6.0"
   }
 }

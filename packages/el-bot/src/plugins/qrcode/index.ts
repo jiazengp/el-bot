@@ -1,10 +1,11 @@
-import fs from 'fs'
-import { resolve } from 'path'
+import fs from 'node:fs'
+import { resolve } from 'node:path'
 import type { Bot } from 'el-bot'
 import { utils } from 'el-bot'
 import QRCode from 'qrcode'
 import type { MessageType } from 'mirai-ts'
 import { Message } from 'mirai-ts'
+import consola from 'consola'
 import type { QRCodeOptions } from './options'
 import qrcodeOptions from './options'
 
@@ -20,7 +21,7 @@ async function generateQR(text: string, folder: string) {
   return filename
 }
 
-export default function(ctx: Bot, options: QRCodeOptions = qrcodeOptions) {
+export default function (ctx: Bot, options: QRCodeOptions = qrcodeOptions) {
   const { cli } = ctx
   const name = 'qrcode'
   const folder = resolve(ctx.el.path!.image, name)
@@ -34,11 +35,11 @@ export default function(ctx: Bot, options: QRCodeOptions = qrcodeOptions) {
   cli
     .command('qrcode <text...>')
     .description('生成二维码')
-    .action(async(text: string[]) => {
+    .action(async (text: string[]) => {
       const msg = ctx.mirai.curMsg as MessageType.ChatMessage
       try {
         const filename = await generateQR(text.join(' '), folder)
-        console.log(`${folder}/${name}/${filename}`)
+        consola.info(`${folder}/${name}/${filename}`)
         const chain = [Message.Image(null, null, `${folder}/${filename}`)]
         msg.reply(chain)
       }

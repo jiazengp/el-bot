@@ -14,12 +14,12 @@ async function guess(text: string) {
  * 能不能好好说话？
  * @param ctx
  */
-export default function(ctx: Bot) {
+export default function (ctx: Bot) {
   const { cli } = ctx
   cli
     .command('nbnhhsh <text...>')
     .description('能不能好好说话？')
-    .action(async(text: string[]) => {
+    .action(async (text: string[]) => {
       const msg = ctx.mirai.curMsg as MessageType.ChatMessage
       try {
         const { data } = await guess(text.join(','))

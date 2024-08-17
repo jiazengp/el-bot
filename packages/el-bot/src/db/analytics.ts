@@ -5,7 +5,6 @@ import { Friend } from './schemas/friend.schema'
 /**
  * 记录触发信息
  * @param mirai
- * @param collection
  */
 async function recordTriggerInfo(mirai: Mirai) {
   if (mirai.curMsg && mirai.curMsg.type === 'GroupMessage') {
@@ -45,7 +44,7 @@ export async function analytics(bot: Bot) {
 
   const sendGroupMessage = mirai.api.sendGroupMessage
   // 重载消息发送函数
-  mirai.api.sendGroupMessage = async(messageChain, target, quote) => {
+  mirai.api.sendGroupMessage = async (messageChain, target, quote) => {
     recordTriggerInfo(mirai)
 
     const data = await sendGroupMessage.apply(mirai.api, [

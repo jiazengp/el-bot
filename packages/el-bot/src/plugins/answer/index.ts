@@ -6,6 +6,7 @@ import type { Bot } from '../..'
 import { renderString } from '../../utils/index'
 import type { ReplyContent } from './utils'
 import { AnswerOptions, displayAnswerList } from './utils'
+
 export { AnswerOptions }
 
 /**
@@ -22,7 +23,8 @@ async function renderStringByApi(
     return renderString(content, data, 'data')
   }
   else {
-    if (!content) return
+    if (!content)
+      return
     (content as any).forEach((msg: MessageType.SingleMessage) => {
       if (msg.type === 'Plain')
         msg.text = renderString(msg.text, data, 'data')
@@ -31,9 +33,10 @@ async function renderStringByApi(
   }
 }
 
-export default function(ctx: Bot, options: AnswerOptions) {
+export default function (ctx: Bot, options: AnswerOptions) {
   const { mirai, cli } = ctx
-  if (!options) return
+  if (!options)
+    return
 
   cli
     .command('answer')
@@ -48,8 +51,9 @@ export default function(ctx: Bot, options: AnswerOptions) {
   // 设置定时
   options.forEach((ans) => {
     if (ans.cron) {
-      nodeSchdule.scheduleJob(ans.cron, async() => {
-        if (!ans.target) return
+      nodeSchdule.scheduleJob(ans.cron, async () => {
+        if (!ans.target)
+          return
         const replyContent = ans.api
           ? await renderStringByApi(ans.api, ans.reply)
           : ans.reply
@@ -59,14 +63,16 @@ export default function(ctx: Bot, options: AnswerOptions) {
   })
 
   // 应答
-  mirai.on('message', async(msg) => {
+  mirai.on('message', async (msg) => {
     // use async in some
     // https://advancedweb.hu/how-to-use-async-functions-with-array-some-and-every-in-javascript/
     for await (const ans of options) {
       let replyContent = null
 
-      if (ans.at)
-        if (!(msg.type === 'GroupMessage' && msg.isAt())) return
+      if (ans.at) {
+        if (!(msg.type === 'GroupMessage' && msg.isAt()))
+          return
+      }
 
       if (msg.plain && check.match(msg.plain, ans)) {
         // 默认监听所有
