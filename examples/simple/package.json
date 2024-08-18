@@ -11,6 +11,7 @@
   "devDependencies": {
     "el-bot": "workspace:*",
     "nodemon": "^3.1.4",
+    "qq-sdk": "workspace:*",
     "tsup": "^8.2.4"
   }
 }

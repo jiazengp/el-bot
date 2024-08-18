@@ -11,7 +11,8 @@
     "moduleResolution": "Node",
     "paths": {
       "el-bot": ["packages/el-bot/src/index.ts"],
-      "el-bot/*": ["packages/el-bot/*"]
+      "el-bot/*": ["packages/el-bot/*"],
+      "qq-sdk": ["packages/qq-sdk/src/index.ts"]
     },
     // custom
     "resolveJsonModule": true,
