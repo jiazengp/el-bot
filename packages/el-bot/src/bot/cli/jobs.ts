@@ -1,4 +1,4 @@
-import shell from 'shelljs'
+import * as shell from 'shelljs'
 import type { Bot } from 'el-bot'
 
 /**

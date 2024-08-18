@@ -1,7 +1,6 @@
-import { check } from 'mirai-ts'
 import type { Bot } from '.'
 
-export default class User {
+export class User {
   constructor(public ctx: Bot) {}
 
   /**
@@ -29,10 +28,10 @@ export default class User {
   isAllowed(qq = 0, reply = false, content = '您没有操作权限') {
     if (
       !qq
-      && this.ctx.mirai.curMsg
-      && check.isChatMessage(this.ctx.mirai.curMsg)
+      // && this.ctx.mirai.curMsg
+      // && check.isChatMessage(this.ctx.mirai.curMsg)
     ) {
-      qq = this.ctx.mirai.curMsg.sender.id
+      // qq = this.ctx.mirai.curMsg.sender.id
     }
 
     const allowFlag = this.isMaster(qq) || this.isAdmin(qq)

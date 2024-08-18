@@ -1,16 +1,20 @@
-import type { OnModuleInit } from '@nestjs/common'
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common'
 
-// import consola from 'consola'
+import { loadConfig } from 'c12'
+import type { ElConfig } from '../config'
+import { Bot } from '../bot'
 
 @Injectable()
 export class ElBotService implements OnModuleInit {
-  /**
-   * 当前 Bot
-   */
-  // private readonly bot = new Bot(el)
+  public bot: Bot | undefined
 
   async onModuleInit() {
+    const { config: elConfig } = await loadConfig<ElConfig>({
+      configFile: 'el-bot.config',
+    })
+
+    this.bot = new Bot(elConfig)
+
     // await this.bot.start()
     Logger.debug('Bot start')
   }

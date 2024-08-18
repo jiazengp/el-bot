@@ -2,15 +2,12 @@ import process from 'node:process'
 import type { Server } from 'node:net'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
-import type {
-  Api,
-  MessageType,
-  MiraiApiHttpSetting,
-  MiraiInstance,
-} from 'mirai-ts'
-import {
-  Mirai,
-} from 'mirai-ts'
+// import type {
+//   Api,
+//   MessageType,
+//   MiraiApiHttpSetting,
+//   MiraiInstance,
+// } from 'mirai-ts'
 import chalk from 'chalk'
 import type commander from 'commander'
 import type mongoose from 'mongoose'
@@ -18,13 +15,13 @@ import consola from 'consola'
 import type { ElConfig, ElUserConfig } from '../config/el'
 import { resolveElConfig } from '../config/el'
 
-import { getAllPlugins, sleep, statement } from '../utils/misc'
+import { getAllPlugins, statement } from '../utils/misc'
 import { connectDb } from '../db'
 import { isFunction } from '../shared'
 import { handleError } from '../utils/error'
-import Sender from './sender'
-import User from './user'
-import Status from './status'
+import { Sender } from './sender'
+import { User } from './user'
+import { Status } from './status'
 import { Plugins } from './plugins'
 import { Command } from './command'
 import { createLogger } from './logger'
@@ -54,7 +51,7 @@ export class Bot {
    * 全局配置
    */
   el: ElConfig
-  mirai: MiraiInstance
+  // mirai: MiraiInstance
   // 激活
   active = true
   /**
@@ -103,8 +100,8 @@ export class Bot {
   isTS = fs.existsSync(resolve(this.rootDir, 'tsconfig.json'))
   constructor(el: ElUserConfig) {
     this.el = resolveElConfig(el)
-    const setting = this.el.setting as MiraiApiHttpSetting
-    this.mirai = new Mirai(setting)
+    // const setting = this.el.setting as MiraiApiHttpSetting
+    // this.mirai = new Mirai(setting)
     this.status = new Status(this)
     this.user = new User(this)
     this.sender = new Sender(this)
@@ -125,7 +122,7 @@ export class Bot {
             target.group.push(this.el.bot.devGroup)
           else target.group = [this.el.bot.devGroup]
         }
-        this.sender.sendMessageByConfig(args.join(' '), target)
+        // this.sender.sendMessageByConfig(args.join(' '), target)
         return logError(args[0], ...args.slice(1))
       }
     }
@@ -134,31 +131,32 @@ export class Bot {
   /**
    * 机器人当前消息 快捷回复
    */
-  reply(msgChain: string | MessageType.MessageChain, quote = false) {
-    if (this.mirai.curMsg && this.mirai.curMsg.reply) {
-      return this.mirai.curMsg.reply(msgChain, quote)
-    }
-    else {
-      this.logger.error('当前消息不存在')
-      return false
-    }
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  reply(msgChain: string, quote = false) {
+    // if (this.mirai.curMsg && this.mirai.curMsg.reply) {
+    //   return this.mirai.curMsg.reply(msgChain, quote)
+    // }
+    // else {
+    //   this.logger.error('当前消息不存在')
+    //   return false
+    // }
   }
 
   /**
    * 自动重连
    */
-  async link(): Promise<Api.Response.BaseResponse | undefined> {
-    try {
-      const data = await this.mirai.link(this.el.qq)
-      return data
-    }
-    catch (err: any) {
-      this.logger.error(err.message)
-      await sleep(3000)
-      this.logger.warning('尝试重新连接...')
-      await this.link()
-    }
-  }
+  // async link(): Promise<Api.Response.BaseResponse | undefined> {
+  //   try {
+  //     const data = await this.mirai.link(this.el.qq)
+  //     return data
+  //   }
+  //   catch (err: any) {
+  //     this.logger.error(err.message)
+  //     await sleep(3000)
+  //     this.logger.warning('尝试重新连接...')
+  //     await this.link()
+  //   }
+  // }
 
   /**
    * 启动机器人
@@ -181,24 +179,24 @@ export class Bot {
     this.logger.info('Link Start!')
 
     // link
-    const data = await this.link()
-    if (data?.code !== 0) {
-      this.logger.error('无法正确链接您的 QQ，请检查 QQ 是否正确！')
-      return
-    }
+    // const data = await this.link()
+    // if (data?.code !== 0) {
+    //   this.logger.error('无法正确链接您的 QQ，请检查 QQ 是否正确！')
+    //   return
+    // }
 
-    // mah about
-    try {
-      const { data } = await this.mirai.api.about()
-      this.logger.info(`[mah] version: ${data.version}`)
-    }
-    catch (e) {
-      console.error(e)
-      this.logger.error(
-        '未检测到 mirai-api-http 版本，请检查是否已与 mah 建立链接！',
-      )
-      return
-    }
+    // // mah about
+    // try {
+    //   const { data } = await this.mirai.api.about()
+    //   this.logger.info(`[mah] version: ${data.version}`)
+    // }
+    // catch (e) {
+    //   console.error(e)
+    //   this.logger.error(
+    //     '未检测到 mirai-api-http 版本，请检查是否已与 mah 建立链接！',
+    //   )
+    //   return
+    // }
 
     // 加载插件
     this.logger.info('开始加载插件')
@@ -228,7 +226,7 @@ export class Bot {
 
     this.plugins.load('custom')
 
-    this.mirai.listen()
+    // this.mirai.listen()
 
     // 监听并解析用户指令
     this._command.listen()
@@ -261,7 +259,7 @@ export class Bot {
       }
 
       this.logger.warning('Bye, Master!')
-      this.mirai.release()
+      // this.mirai.release()
     })
   }
 

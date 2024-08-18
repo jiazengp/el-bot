@@ -1,7 +1,6 @@
-import type { Bot } from 'el-bot'
-import { check } from 'mirai-ts'
+// import { check } from 'mirai-ts'
 import consola from 'consola'
-import { getHelpContent } from './utils'
+import type { Bot } from '../../bot'
 
 /**
  * 面向用户的指令
@@ -77,15 +76,15 @@ export class Command {
   }
 
   listen() {
-    const { mirai } = this.ctx
-    mirai.on('message', (msg) => {
-      if (check.isAt(msg, this.ctx.el.qq) && msg.plain.trim() === '帮助') {
-        const content = getHelpContent(this.children)
-        msg.reply(content)
-        return
-      }
+    // const { mirai } = this.ctx
+    // mirai.on('message', (msg) => {
+    //   // if (check.isAt(msg, this.ctx.el.qq) && msg.plain.trim() === '帮助') {
+    //   //   const content = getHelpContent(this.children)
+    //   //   msg.reply(content)
+    //   //   return
+    //   // }
 
-      this.parse(msg.plain.trim())
-    })
+    //   this.parse(msg.plain.trim())
+    // })
   }
 }

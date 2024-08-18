@@ -1,8 +1,8 @@
 import type { EventEmitter } from 'node:events'
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import shell from 'shelljs'
+import * as shell from 'shelljs'
 
-import { Webhooks, createNodeMiddleware } from '@octokit/webhooks'
+import * as octokit from '@octokit/webhooks'
 import type { Bot } from 'el-bot'
 
 // github handler
@@ -14,14 +14,17 @@ export interface handler extends EventEmitter {
   ): void
 }
 
-export default function (ctx: Bot) {
+/**
+ * Setup github webhook handler
+ * @see https://github.com/octokit/webhooks
+ */
+export function githubHandler(ctx: Bot) {
   const config = {
     secret: ctx.el.webhook?.secret || 'el-psy-congroo',
   }
 
-  const handler = new Webhooks(config)
-
-  const middleware = createNodeMiddleware(handler, {
+  const handler = new octokit.Webhooks(config)
+  const middleware = octokit.createNodeMiddleware(handler, {
     path: ctx.el.webhook?.path || '/webhook',
   })
 

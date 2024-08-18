@@ -8,11 +8,13 @@ el-bot 的实现基于 mirai 的 [mirai-api-http](https://github.com/project-mir
 
 但事实上，在长久的实践后我因为 mirai 经常出现的内存泄漏而不堪其扰，决定将其迁移至 go-cqhttp。
 
-而 [koishi](https://github.com/koishijs/koishi) 已经在这么做了。
+> ~~而 [koishi](https://github.com/koishijs/koishi) 已经在这么做了。koishi 目前则基于 [onebot](https://onebot.dev/) 协议的 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)。~~
+> koishi 目前采用适配器的方式，支持各种接入。
+> 但 koishi 为了抽象化，使得它的上手与学习成本较高，负载较重。
 
-> koishi 目前则基于 [onebot](https://onebot.dev/) 协议的 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)。
+~~因此在未来我决定直接基于 koishi 做一些简化的工作，同时这也可以减少一些与之相同的重复工作。~~
 
-因此在未来我决定直接基于 koishi 做一些简化的工作，同时这也可以减少一些与之相同的重复工作。
+使用 [QQ 机器人官方 API](https://bot.q.qq.com/wiki/) 进行开发。
 
 ## mirai & mirai-console & mirai-api-http & mirai-ts & el-bot 之间的关系
 

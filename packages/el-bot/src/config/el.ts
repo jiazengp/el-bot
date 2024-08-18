@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import type { MiraiApiHttpSetting } from 'mirai-ts'
-import { mergeConfig, parseYaml } from '../utils/config'
+// import type { MiraiApiHttpSetting } from 'mirai-ts'
+import { mergeConfig } from '../utils/config'
 import type { WebhookConfig } from '../bot/webhook'
 import type { Target } from '../types/config'
 import type { BotConfig, BotUserConfig } from './bot'
@@ -49,7 +49,7 @@ export interface ElConfig<T = BotConfig> {
    * MiraiApiHttp setting.yml 路径
    * 或传入 MiraiApiHttpConfig 对象配置
    */
-  setting: MiraiApiHttpSetting | string
+  // setting: MiraiApiHttpSetting | string
   /**
    * mirai info
    */
@@ -105,7 +105,7 @@ export function resolveElConfig(userConfig: ElUserConfig) {
   }
   const defaultElConfig: ElConfig = {
     qq: 0,
-    setting: '../mcl/config/net.mamoe.mirai-api-http/setting.yml',
+    // setting: '../mcl/config/net.mamoe.mirai-api-http/setting.yml',
     mirai: miraiConfig,
     db: {
       enable: false,
@@ -154,14 +154,6 @@ export function resolveElConfig(userConfig: ElUserConfig) {
   config.pkg = pkg
   config.path.image = resolve(config.base, config.mirai.folder, `${assetsFolder}/images`)
   config.path.image = resolve(config.base, config.mirai.folder, `${assetsFolder}/voices`)
-
-  // after merge
-  // adapt for config path
-  if (typeof config.setting === 'string') {
-    config.setting = parseYaml(
-      resolve(config.base!, config.setting),
-    ) as MiraiApiHttpSetting
-  }
 
   return config
 }

@@ -3,10 +3,10 @@ import type { Server } from 'node:net'
 import Koa from 'koa'
 import cors from '@koa/cors'
 import bodyParser from 'koa-bodyparser'
-import type { Webhooks } from '@octokit/webhooks'
 import type { Bot } from '..'
 import { handleError } from '../../utils/error'
-import githubHandler from './github-handler'
+// import * as octokit from '@octokit/webhooks'
+// import { githubHandler } from './github-handler'
 
 export interface WebhookConfig {
   /**
@@ -40,19 +40,21 @@ export default class Webhook {
   // 默认配置
   config: WebhookConfig
   emitter: events.EventEmitter
-  githubHandler: Webhooks<any>
-  middleware: (
-    request: any,
-    response: any,
-    next?: Koa.Next
-  ) => Promise<any>
+
+  // githubHandler: octokit.Webhooks<any>
+
+  // middleware: (
+  //   request: any,
+  //   response: any,
+  //   next?: Koa.Next
+  // ) => Promise<any>
 
   constructor(public ctx: Bot) {
     this.config = ctx.el.webhook!
     this.emitter = new events.EventEmitter()
-    const { handler, middleware } = githubHandler(ctx)
-    this.githubHandler = handler
-    this.middleware = middleware
+    // const { handler, middleware } = githubHandler(ctx)
+    // this.githubHandler = handler
+    // this.middleware = middleware
   }
 
   /**
@@ -65,12 +67,12 @@ export default class Webhook {
     const app = new Koa()
     app.use(cors())
     app.use(bodyParser())
-    app.use((ctx, next) => {
-      ctx.body = (ctx.request as any).body;
-      (ctx.req as any).body = ctx.body
-      ctx.status = 200
-      return this.middleware(ctx.req, ctx.res, next)
-    })
+    // app.use((ctx, next) => {
+    //   ctx.body = (ctx.request as any).body;
+    //   (ctx.req as any).body = ctx.body
+    //   ctx.status = 200
+    //   return this.middleware(ctx.req, ctx.res, next)
+    // })
 
     app.use((ctx) => {
       this.parse(ctx)

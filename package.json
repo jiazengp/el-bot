@@ -24,13 +24,13 @@
   },
   "scripts": {
     "build": "npm run build:bot",
-    "build:bot": "pnpm -C packages/el-bot run build",
+    "build:lib": "pnpm -C packages/el-bot run build",
     "build:demo": "pnpm run build -C demo",
     "build:api": "pnpm -C packages/el-bot run build:api",
     "demo": "pnpm -C demo run dev",
-    "dev": "run-p dev:*",
-    "dev:bot": "pnpm -C demo run start:debug",
-    "dev:demo": "pnpm -C demo run dev",
+    "dev": "run-p dev:lib dev:bot",
+    "dev:bot": "npm run dev:simple",
+    "dev:simple": "pnpm -C examples/simple run dev",
     "dev:lib": "pnpm -C packages/el-bot run dev",
     "docs:dev": "pnpm -C docs dev",
     "docs:build": "pnpm -C docs run build",
@@ -40,11 +40,7 @@
     "cqhttp:update": "cd go-cqhttp && ./go-cqhttp update",
     "start": "pnpm run start:demo",
     "start:demo": "pnpm -C demo start",
-    "prepare": "husky install",
     "typecheck": "tsc --noEmit"
-  },
-  "peerDependencies": {
-    "koishi-core": "^3.14.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.26.0",
@@ -54,8 +50,7 @@
     "@unocss/eslint-plugin": "^0.62.2",
     "eslint": "^9.9.0",
     "eslint-plugin-format": "^0.1.2",
-    "husky": "7.0.4",
-    "koishi-core": "^3.14.2",
+    "husky": "9.1.4",
     "lint-staged": "^15.2.9",
     "nodemon": "^3.1.4",
     "npm-run-all": "^4.1.5",

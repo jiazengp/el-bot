@@ -7,7 +7,7 @@ import type { Bot } from 'el-bot'
  */
 
 import type { EventType, MessageType } from 'mirai-ts'
-import { exec } from 'shelljs'
+import * as shelljs from 'shelljs'
 import schedule from 'node-schedule'
 import { parseYaml } from '../../utils/config'
 import { handleError } from '../../utils/error'
@@ -95,7 +95,7 @@ function createWorkflow(ctx: Bot, workflow: WorkflowConfig) {
       const job = jobs[name]
       job.steps.forEach((step) => {
         if (step.run)
-          exec(step.run)
+          shelljs.exec(step.run)
       })
     })
   }

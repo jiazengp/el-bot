@@ -1,0 +1,16 @@
+{
+  "name": "@el-bot/demo-simple",
+  "version": "0.1.0",
+  "description": "A simple demo for el-bot.",
+  "scripts": {
+    "dev": "tsup --watch --onSuccess \"nodemon dist/index.js -w dist\"",
+    "build": "tsup",
+    "start": "tsx src/index.ts",
+    "start:prod": "nodemon dist/index.js"
+  },
+  "devDependencies": {
+    "el-bot": "workspace:*",
+    "nodemon": "^3.1.4",
+    "tsup": "^8.2.4"
+  }
+}

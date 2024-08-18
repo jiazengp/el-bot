@@ -4,16 +4,16 @@
  */
 import type { Bot } from 'el-bot'
 import type { MessageType } from 'mirai-ts'
-import shell from 'shelljs'
+import * as shell from 'shelljs'
 import type commander from 'commander'
 import { Command } from 'commander'
 import type { PluginType } from '../plugins'
-import { aboutInfo, cleanOptions } from './utils'
+import { aboutInfo } from './utils'
 
 /**
  * 处理全局选项
  */
-async function processOptions(
+export async function processOptions(
   program: commander.Command,
   ctx: Bot,
   msg: MessageType.ChatMessage,
@@ -25,8 +25,8 @@ async function processOptions(
   if (options.v || options.version) {
     msg.reply(`el-bot: v${pkg.version}`)
 
-    const mahAbout = await ctx.mirai.api.about()
-    msg.reply(`mirai-api-http: v${mahAbout.data.version}`)
+    // const mahAbout = await ctx.mirai.api.about()
+    // msg.reply(`mirai-api-http: v${mahAbout.data.version}`)
   }
 
   // about
@@ -36,25 +36,26 @@ async function processOptions(
   }
 }
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 export function initCli(ctx: Bot, name: string) {
-  const { mirai } = ctx
+  // const { mirai } = ctx
 
   // modify prototype
-  Command.prototype.outputHelp = function (cb: any) {
-    if (!cb) {
-      cb = (passthru: any) => {
-        return passthru
-      }
-    }
-    const cbOutput = cb(this.helpInformation())
-    const command = (ctx.mirai.curMsg as MessageType.ChatMessage).plain.trim()
-    if (
-      cbOutput
-      && (this.parent || command === 'el -h' || command === 'el --help')
-    ) {
-      ctx.reply(cbOutput.trim())
-    }
-  }
+  // Command.prototype.outputHelp = function (cb: any) {
+  //   if (!cb) {
+  //     cb = (passthru: any) => {
+  //       return passthru
+  //     }
+  //   }
+  //   const cbOutput = cb(this.helpInformation())
+  //   const command = (ctx.mirai.curMsg as MessageType.ChatMessage).plain.trim()
+  //   if (
+  //     cbOutput
+  //     && (this.parent || command === 'el -h' || command === 'el --help')
+  //   ) {
+  //     ctx.reply(cbOutput.trim())
+  //   }
+  // }
 
   const cli = new Command('el')
   const program = cli
@@ -112,28 +113,28 @@ export function initCli(ctx: Bot, name: string) {
       }
     })
 
-  mirai.on('message', (msg) => {
-    // qq = msg.sender.id;
-    if (msg.plain.slice(0, name.length) !== name)
-      return
-    if (msg.plain[name.length] !== ' ')
-      return
+  // mirai.on('message', (msg) => {
+  //   // qq = msg.sender.id;
+  //   if (msg.plain.slice(0, name.length) !== name)
+  //     return
+  //   if (msg.plain[name.length] !== ' ')
+  //     return
 
-    try {
-      const cmd = msg.plain.split(' ')
-      cmd.shift()
-      program.parse(cmd, { from: 'user' })
-    }
-    catch (err: any) {
-      if (err && err.code !== 'commander.help' && err.exitCode) {
-        ctx.logger.error(`[cli] ${msg.plain}`)
-        ctx.reply(err.message)
-      }
-    }
+  //   try {
+  //     const cmd = msg.plain.split(' ')
+  //     cmd.shift()
+  //     program.parse(cmd, { from: 'user' })
+  //   }
+  //   catch (err: any) {
+  //     if (err && err.code !== 'commander.help' && err.exitCode) {
+  //       ctx.logger.error(`[cli] ${msg.plain}`)
+  //       ctx.reply(err.message)
+  //     }
+  //   }
 
-    processOptions(program, ctx, msg)
-    cleanOptions(program)
-  })
+  //   processOptions(program, ctx, msg)
+  //   cleanOptions(program)
+  // })
 
   return program
 }

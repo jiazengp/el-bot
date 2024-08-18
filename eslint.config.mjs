@@ -5,4 +5,9 @@ export default antfu({
   formatters: true,
   unocss: true,
   vue: true,
+}, {
+  rules: {
+    // for nest import
+    'ts/consistent-type-imports': 'off',
+  },
 })

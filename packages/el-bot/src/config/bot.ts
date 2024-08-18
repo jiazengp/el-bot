@@ -1,5 +1,5 @@
-import type { AnswerOptions } from '../plugins/answer'
-import type { ForwardOptions } from '../plugins/forward'
+// import type { AnswerOptions } from '../plugins/answer'
+// import type { ForwardOptions } from '../plugins/forward'
 
 export interface BotConfig {
   /**
@@ -40,8 +40,8 @@ export interface BotConfig {
   devGroup: number
 
   // 默认插件
-  answer?: AnswerOptions
-  forward?: ForwardOptions
+  // answer?: AnswerOptions
+  // forward?: ForwardOptions
 
   /**
    * 其他插件配置

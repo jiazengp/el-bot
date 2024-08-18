@@ -1,5 +1,6 @@
 {
   "name": "@el-bot/demo",
+  "type": "module",
   "version": "0.0.1",
   "private": true,
   "description": "这只是一个开发用的测试机器人。",
@@ -16,7 +17,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "nodemon dist/main",
     "build": "nest build",
-    "lint": "eslint \"**/*.ts\" --fix",
+    "lint": "eslint .",
     "dev": "npm run start:dev",
     "test": "ts-node src/index.ts"
   },
