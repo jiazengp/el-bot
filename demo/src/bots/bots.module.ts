@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common'
+import { ElBotModule } from 'el-bot'
 import { BotsService } from './bots.service'
 // import { ElModule } from './el/el.module'
-import { KoishiModule } from './koishi/koishi.module'
 
 @Module({
   imports: [
     // ElModule,
-    KoishiModule,
+    ElBotModule,
   ],
   providers: [BotsService],
 })

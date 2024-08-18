@@ -2,12 +2,12 @@ import type { MessageType } from 'mirai-ts'
 import { check } from 'mirai-ts'
 import axios from 'axios'
 import * as nodeSchdule from 'node-schedule'
-import type { Bot } from '../..'
+import type { Bot } from '../../bot'
 import { renderString } from '../../utils/index'
-import type { ReplyContent } from './utils'
-import { AnswerOptions, displayAnswerList } from './utils'
+import type { AnswerOptions, ReplyContent } from './utils'
+import { displayAnswerList } from './utils'
 
-export { AnswerOptions }
+export * from './utils'
 
 /**
  * 根据 API 返回的内容渲染字符串

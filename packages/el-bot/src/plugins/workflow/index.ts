@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 
 /**
  * ref github actions

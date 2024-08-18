@@ -1,4 +1,4 @@
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import { renderString } from '../../utils'
 import type * as Config from '../../types/config'
 

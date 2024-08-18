@@ -1,4 +1,4 @@
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import consola from 'consola'
 
 export default function (ctx: Bot) {

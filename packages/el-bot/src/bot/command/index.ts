@@ -1,4 +1,4 @@
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import { check } from 'mirai-ts'
 import consola from 'consola'
 import { getHelpContent } from './utils'

@@ -1,4 +1,4 @@
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import dayjs from 'dayjs'
 import schedule from 'node-schedule'
 import type { MessageType } from 'mirai-ts'

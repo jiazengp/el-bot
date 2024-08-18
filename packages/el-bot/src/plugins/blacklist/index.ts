@@ -1,4 +1,4 @@
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import type { EventType, MessageType } from 'mirai-ts'
 import { check } from 'mirai-ts'
 import { block, displayList, initBlacklist, unBlock } from './utils'

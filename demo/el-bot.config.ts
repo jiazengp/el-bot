@@ -2,7 +2,7 @@ import path from 'node:path'
 import process from 'node:process'
 import dotenv from 'dotenv'
 import { defineConfig } from 'el-bot'
-import botConfig from './bot'
+import botConfig from './config/bot'
 
 dotenv.config({
   path: path.resolve(process.cwd(), '.env'),

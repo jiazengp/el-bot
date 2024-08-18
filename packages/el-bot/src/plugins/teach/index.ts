@@ -1,4 +1,4 @@
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import type { MessageType } from 'mirai-ts'
 import type { TeachOptions } from './options'
 import { displayList } from './utils'

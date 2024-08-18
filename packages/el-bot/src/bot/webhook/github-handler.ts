@@ -26,7 +26,7 @@ export default function (ctx: Bot) {
   })
 
   handler.onError((err) => {
-    ctx.logger.error(`Error: ${err.message}`)
+    ctx.logger.error(`Error: ${err}`)
   })
 
   // 处理

@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import process from 'node:process'
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import chalk from 'chalk'
 
 /**

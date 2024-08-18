@@ -21,6 +21,6 @@
     "picocolors": "^1.0.1"
   },
   "devDependencies": {
-    "tsup": "^5.12.9"
+    "tsup": "^8.2.4"
   }
 }

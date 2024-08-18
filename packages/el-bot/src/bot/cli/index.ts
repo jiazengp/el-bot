@@ -2,7 +2,7 @@
  * 面向开发者的终端
  * @packageDocumentation
  */
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import type { MessageType } from 'mirai-ts'
 import shell from 'shelljs'
 import type commander from 'commander'

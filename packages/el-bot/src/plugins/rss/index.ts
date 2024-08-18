@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import dayjs from 'dayjs'
 import { htmlToText } from 'html-to-text'
 import schedule from 'node-schedule'

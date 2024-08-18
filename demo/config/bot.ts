@@ -1,5 +1,18 @@
 import { defineBotConfig } from 'el-bot'
 
+export const config = {
+  rules: [
+    {
+      match: '在吗',
+      reply: '爪巴',
+    },
+    {
+      match: /^(.+)一时爽$/,
+      reply: (_: any, str: string) => `一直${str}一直爽`,
+    },
+  ],
+}
+
 export default defineBotConfig({
   'name': '嘿',
   'autoloadPlugins': true,

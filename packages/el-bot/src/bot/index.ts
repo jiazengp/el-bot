@@ -38,6 +38,9 @@ import { initCli } from './cli'
 // type
 import type { Plugin, PluginInstallFunction } from './plugins'
 
+// export
+export * from './logger'
+
 /**
  * 创建机器人
  * @param el

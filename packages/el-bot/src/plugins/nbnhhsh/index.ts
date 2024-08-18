@@ -1,4 +1,4 @@
-import type Bot from 'el-bot'
+import type { Bot } from 'el-bot'
 import type { MessageType } from 'mirai-ts'
 import axios from 'axios'
 import { handleError } from '../../utils/error'

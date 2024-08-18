@@ -13,6 +13,6 @@
     "removeComments": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "**/*/package.json", "src/plugins/**/*"],
+  "include": ["src/**/*.ts", "**/*/package.json", "src/plugins/**/*", "../packages/el-bot/src/nest/service.ts", "el-bot.config.ts", "../packages/el-bot/src/plugins/jrmsn.ts", "../packages/el-bot/src/plugins/ping.ts"],
   "exclude": ["dist", "node_modules", "test", "**/*spec.ts"]
 }
