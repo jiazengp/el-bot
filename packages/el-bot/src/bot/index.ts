@@ -1,32 +1,27 @@
-import process from 'node:process'
-import type { Server } from 'node:net'
-import fs from 'node:fs'
-import { resolve } from 'node:path'
-// import type {
-//   Api,
-//   MessageType,
-//   MiraiApiHttpSetting,
-//   MiraiInstance,
-// } from 'mirai-ts'
-import chalk from 'chalk'
 import type commander from 'commander'
 import type mongoose from 'mongoose'
-import consola from 'consola'
+import type { Server } from 'node:net'
 import type { ElConfig, ElUserConfig } from '../config/el'
+import fs from 'node:fs'
+import { resolve } from 'node:path'
+import process from 'node:process'
+import chalk from 'chalk'
+import consola from 'consola'
+import { NCWebsocket } from 'node-napcat-ts'
 import { resolveElConfig } from '../config/el'
 
-import { getAllPlugins, statement } from '../utils/misc'
 import { connectDb } from '../db'
 import { isFunction } from '../shared'
 import { handleError } from '../utils/error'
-import { Sender } from './sender'
-import { User } from './user'
-import { Status } from './status'
-import { Plugins } from './plugins'
+import { statement } from '../utils/misc'
+import { initCli } from './cli'
 import { Command } from './command'
 import { createLogger } from './logger'
+import { Plugins } from './plugins'
+import { Sender } from './sender'
+import { Status } from './status'
+import { User } from './user'
 import Webhook from './webhook'
-import { initCli } from './cli'
 
 // shared
 
@@ -46,6 +41,8 @@ export function createBot(el: ElUserConfig) {
   return new Bot(el)
 }
 
+export const logger = createLogger('🤖')
+
 export class Bot {
   /**
    * 全局配置
@@ -58,6 +55,12 @@ export class Bot {
    * 数据库，默认使用 MongoDB
    */
   db?: mongoose.Connection
+
+  /**
+   * node-napcat-ts
+   */
+  napcat: NCWebsocket
+
   /**
    * 状态
    */
@@ -89,7 +92,7 @@ export class Bot {
   /**
    * 日志系统
    */
-  logger = createLogger('el-bot')
+  logger = logger
   webhook?: Webhook
   /**
    * 是否开发模式下
@@ -126,6 +129,9 @@ export class Bot {
         return logError(args[0], ...args.slice(1))
       }
     }
+
+    // napcat
+    this.napcat = new NCWebsocket(this.el.napcat)
   }
 
   /**
@@ -171,11 +177,15 @@ export class Bot {
 
     // 链接 QQ
     if (!this.el.qq) {
-      this.logger.error('未传入机器人 QQ')
-      return
+      this.logger.warn('未传入机器人 QQ')
+    }
+    else {
+      this.logger.info(`Bot QQ: ${chalk.green(this.el.qq)}`)
     }
 
-    this.logger.info(`Bot QQ: ${chalk.green(this.el.qq)}`)
+    this.napcat.connect()
+    this.logger.success('NapcatQQ connected!')
+
     this.logger.info('Link Start!')
 
     // link
@@ -199,32 +209,32 @@ export class Bot {
     // }
 
     // 加载插件
-    this.logger.info('开始加载插件')
-    this.plugins.load('default')
-    this.plugins.load('official')
-    this.plugins.load('community')
+    // this.logger.info('开始加载插件')
+    // this.plugins.load('default')
+    // this.plugins.load('official')
+    // this.plugins.load('community')
 
-    if (this.el.bot.autoloadPlugins) {
-      try {
-        const allCustomPlugins = getAllPlugins(
-          resolve(
-            this.rootDir,
-            (this.isTS ? 'src/' : '') + this.el.bot.pluginDir,
-          ),
-        )
-        this.el.bot.plugins!.custom = allCustomPlugins.map(path =>
-          resolve((this.isTS ? 'dist/' : '') + this.el.bot.pluginDir, path),
-        )
-      }
-      catch (e: any) {
-        this.logger.error(
-          `无法加载 plugins ${this.el.bot.pluginDir} 目录，请检查 'bot.pluginDir' 配置`,
-        )
-        consola.error(e)
-      }
-    }
+    // if (this.el.bot.autoloadPlugins) {
+    //   try {
+    //     const allCustomPlugins = getAllPlugins(
+    //       resolve(
+    //         this.rootDir,
+    //         (this.isTS ? 'src/' : '') + this.el.bot.pluginDir,
+    //       ),
+    //     )
+    //     this.el.bot.plugins!.custom = allCustomPlugins.map(path =>
+    //       resolve((this.isTS ? 'dist/' : '') + this.el.bot.pluginDir, path),
+    //     )
+    //   }
+    //   catch (e: any) {
+    //     this.logger.error(
+    //       `无法加载 plugins ${this.el.bot.pluginDir} 目录，请检查 'bot.pluginDir' 配置`,
+    //     )
+    //     consola.error(e)
+    //   }
+    // }
 
-    this.plugins.load('custom')
+    // this.plugins.load('custom')
 
     // this.mirai.listen()
 

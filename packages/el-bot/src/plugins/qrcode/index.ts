@@ -1,12 +1,12 @@
+import type { Bot } from 'el-bot'
+import type { MessageType } from 'mirai-ts'
+import type { QRCodeOptions } from './options'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
-import type { Bot } from 'el-bot'
-import { utils } from 'el-bot'
-import QRCode from 'qrcode'
-import type { MessageType } from 'mirai-ts'
-import { Message } from 'mirai-ts'
 import consola from 'consola'
-import type { QRCodeOptions } from './options'
+import { utils } from 'el-bot'
+import { Message } from 'mirai-ts'
+import QRCode from 'qrcode'
 import qrcodeOptions from './options'
 
 /**

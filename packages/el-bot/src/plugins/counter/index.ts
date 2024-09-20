@@ -1,7 +1,7 @@
 import type { Bot } from 'el-bot'
 import type { MessageType } from 'mirai-ts'
-import { check } from 'mirai-ts'
 import type { ICounter } from './counter.schema'
+import { check } from 'mirai-ts'
 import { Counter } from './counter.schema'
 
 /**

@@ -1,7 +1,7 @@
-import { Message, check } from 'mirai-ts'
+import type { Bot } from 'el-bot'
 import axios from 'axios'
 import { utils } from 'el-bot'
-import type { Bot } from 'el-bot'
+import { check, Message } from 'mirai-ts'
 
 /**
  * 色图格式

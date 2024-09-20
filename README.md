@@ -137,3 +137,7 @@ npm run dev:lib
 # 构建 el-bot
 npm run build
 ```
+
+## V1
+
+Fully ESM & TS, based on `vite-node`.

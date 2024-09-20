@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
 import type { Bot } from 'el-bot'
 import type { dbConfig } from '../config/el'
+import mongoose from 'mongoose'
 import { analytics } from './analytics'
 
 export async function connectDb(bot: Bot, dbConfig: dbConfig): Promise<void> {

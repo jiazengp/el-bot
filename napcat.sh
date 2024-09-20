@@ -99,11 +99,11 @@ generate_docker_command() {
 
     local qq=$1
     local mode=$2
-    docker_cmd1="sudo docker run -d -e ACCOUNT=$qq -e"
+    docker_cmd1="sudo docker run -d -e ACCOUNT=$qq"
     docker_cmd2="--name napcat --restart=always ${target_proxy:+${target_proxy}/}mlikiowa/napcat-docker:latest"
-    docker_ws="$docker_cmd1 WS_ENABLE=true -p 3001:3001 -p 6099:6099 $docker_cmd2"
-    docker_reverse_ws="$docker_cmd1 WSR_ENABLE=true -e WS_URLS='[]' $docker_cmd2"
-    docker_reverse_http="$docker_cmd1 HTTP_ENABLE=true -e HTTP_POST_ENABLE=true -e HTTP_URLS='[]' -p 3000:3000 -p 6099:6099 $docker_cmd2"
+    docker_ws="$docker_cmd1 -e WS_ENABLE=true -e NAPCAT_GID=$(id -g) -e NAPCAT_UID=$(id -u) -p 3001:3001 -p 6099:6099 $docker_cmd2"
+    docker_reverse_ws="$docker_cmd1 -e WSR_ENABLE=true -e NAPCAT_GID=$(id -g) -e NAPCAT_UID=$(id -u) -e WS_URLS='[]' -p 6099:6099 $docker_cmd2"
+    docker_reverse_http="$docker_cmd1 -e HTTP_ENABLE=true  -e NAPCAT_GID=$(id -g) -e NAPCAT_UID=$(id -u) -e HTTP_POST_ENABLE=true -e HTTP_URLS='[]' -p 3000:3000 -p 6099:6099 $docker_cmd2"
     if [ "$mode" = "ws" ]; then
         echo $docker_ws
     elif [ "$mode" = "reverse_ws" ]; then
@@ -249,21 +249,36 @@ else
     exit 1
 fi
 
+update_linuxqq_config() {
+    echo "正在更新QQ配置..."
+    # 查找用户的QQ配置文件
+    confs=$(sudo find /home -name "config.json" -path "*/.config/QQ/versions/*" 2>/dev/null)
+    if [ -f /root/.config/QQ/versions/config.json ]; then
+        confs="/root/.config/QQ/versions/config.json $confs"
+    fi
+    # 遍历配置文件并进行修改
+    for conf in $confs; do
+        echo "正在修改 $conf..."
+        sudo jq --arg targetVer "$package_targetVer" --arg buildId "$target_build" \
+        '.baseVersion = $targetVer | .curVersion = $targetVer | .buildId = $buildId' "$conf" > "$conf.tmp" && \
+        sudo mv "$conf.tmp" "$conf" || { echo "QQ配置更新失败！"; exit 1; }
+    done
+}
+
 install_linuxqq() {
     echo "安装LinuxQQ..."
-    qq_download_url=""
-    qq_downGetUrl="https://qq-web.cdn-go.cn/im.qq.com_new/4d7d217d/202408081656/linuxQQDownload.js"
+    base_url="https://dldir1.qq.com/qqfile/qq/QQNT/0724892e/linuxqq_3.2.12-27597"
     if [ "$system_arch" = "amd64" ]; then
         if [ "$package_installer" = "rpm" ]; then
-            qq_download_url=$(curl -s "$qq_downGetUrl" | grep -o -E 'https://dldir1\.qq\.com/qqfile/qq/QQNT/Linux/QQ_[0-9]+\.[0-9]+\.[0-9]+_[0-9]{6}_x86_64_[0-9]{2}\.rpm')
+            qq_download_url="${base_url}_x86_64.rpm"
         elif [ "$package_installer" = "dpkg" ]; then
-            qq_download_url=$(curl -s "$qq_downGetUrl" | grep -o -E 'https://dldir1\.qq\.com/qqfile/qq/QQNT/Linux/QQ_[0-9]+\.[0-9]+\.[0-9]+_[0-9]{6}_amd64_[0-9]{2}\.deb')
+            qq_download_url="${base_url}_amd64.deb"
         fi
     elif [ "$system_arch" = "arm64" ]; then
         if [ "$package_installer" = "rpm" ]; then
-            qq_download_url=$(curl -s "$qq_downGetUrl" | grep -o -E 'https://dldir1\.qq\.com/qqfile/qq/QQNT/Linux/QQ_[0-9]+\.[0-9]+\.[0-9]+_[0-9]{6}_aarch64_[0-9]{2}\.rpm')
+            qq_download_url="${base_url}_aarch64.rpm"
         elif [ "$package_installer" = "dpkg" ]; then
-            qq_download_url=$(curl -s "$qq_downGetUrl" | grep -o -E 'https://dldir1\.qq\.com/qqfile/qq/QQNT/Linux/QQ_[0-9]+\.[0-9]+\.[0-9]+_[0-9]{6}_arm64_[0-9]{2}\.deb')
+            qq_download_url="${base_url}_arm64.deb"
         fi
     fi
 
@@ -306,11 +321,12 @@ install_linuxqq() {
         # sudo apt install -y libasound2t64
         rm -f QQ.deb
     fi
+    update_linuxqq_config
 }
 
 # 检测是否已安装LinuxQQ
 package_name="linuxqq"
-package_targetVer="3.2.12-26909"
+package_targetVer="3.2.12-27597"
 target_build=${package_targetVer##*-}
 package_installer=$(detect_package_installer)
 

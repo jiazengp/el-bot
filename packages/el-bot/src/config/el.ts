@@ -1,11 +1,12 @@
+import type { WebhookConfig } from '../bot/webhook'
+import type { Target } from '../types/config'
+import type { BotConfig, BotUserConfig } from './bot'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
 // import type { MiraiApiHttpSetting } from 'mirai-ts'
+import { NCWebsocketOptions } from 'node-napcat-ts'
 import { mergeConfig } from '../utils/config'
-import type { WebhookConfig } from '../bot/webhook'
-import type { Target } from '../types/config'
-import type { BotConfig, BotUserConfig } from './bot'
 
 const assetsFolder = 'data/net.mamoe.mirai-api-http'
 
@@ -62,6 +63,12 @@ export interface ElConfig<T = BotConfig> {
    * 机器人及相关插件配置
    */
   bot: T
+  /**
+   * node-napcat-ts 配置
+   * @see https://github.com/huankong233/node-napcat-ts
+   * @see https://blog.huankong.top/docs/node-napcat-ts/
+   */
+  napcat: NCWebsocketOptions
   /**
    * webhook 配置
    */

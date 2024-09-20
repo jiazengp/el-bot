@@ -1,7 +1,7 @@
-import axios from 'axios'
-import { check } from 'mirai-ts'
-import { utils } from 'el-bot'
 import type { Bot } from 'el-bot'
+import axios from 'axios'
+import { utils } from 'el-bot'
+import { check } from 'mirai-ts'
 
 let niubiJson: any = null
 

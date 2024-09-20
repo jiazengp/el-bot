@@ -1,7 +1,7 @@
 import type { DynamicModule } from '@nestjs/common'
+import type { ElConfig } from '../config'
 import { Module } from '@nestjs/common'
 import consola from 'consola'
-import type { ElConfig } from '../config'
 import { ElBotService } from './service'
 
 /**

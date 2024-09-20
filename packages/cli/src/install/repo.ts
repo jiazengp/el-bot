@@ -1,6 +1,6 @@
 import fs from 'node:fs'
-import axios from 'axios'
 import { Logger } from '@yunyoujun/logger'
+import axios from 'axios'
 import download from 'download'
 import ProgressBar from 'progress'
 

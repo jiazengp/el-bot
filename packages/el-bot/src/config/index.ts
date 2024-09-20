@@ -1,12 +1,12 @@
+import type { BotConfig, BotUserConfig } from './bot'
+import type { ElUserConfig } from './el'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 import { createLogger } from '../bot/logger'
-import type { BotConfig, BotUserConfig } from './bot'
-import type { ElUserConfig } from './el'
 
-export * from './el'
 export * from './bot'
+export * from './el'
 
 const logger = createLogger('[config]')
 
@@ -76,6 +76,7 @@ export async function loadConfigFromFile(
 }
 
 /**
+ * el-bot.config.ts
  * 机器人全局配置
  * @param config
  */

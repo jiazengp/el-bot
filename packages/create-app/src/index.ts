@@ -3,9 +3,9 @@
 
 /* eslint-env node */
 
+import { exec } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
-import { exec } from 'node:child_process'
 import process from 'node:process'
 import { prompt } from 'enquirer'
 import c from 'picocolors'

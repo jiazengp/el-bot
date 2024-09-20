@@ -1,11 +1,11 @@
+import type { Bot } from '.'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 import consola from 'consola'
-import { merge } from '../utils/config'
 import { isFunction } from '../shared'
+import { merge } from '../utils/config'
 import { handleError } from '../utils/error'
-import type { Bot } from '.'
 
 export type PluginInstallFunction = (ctx: Bot, ...options: any[]) => any
 

@@ -1,9 +1,9 @@
+import type { Bot } from 'el-bot'
 import type { EventEmitter } from 'node:events'
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import * as shell from 'shelljs'
 
 import * as octokit from '@octokit/webhooks'
-import type { Bot } from 'el-bot'
+import * as shell from 'shelljs'
 
 // github handler
 export interface handler extends EventEmitter {

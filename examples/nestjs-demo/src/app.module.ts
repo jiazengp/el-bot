@@ -1,8 +1,8 @@
 import { Module, OnModuleInit } from '@nestjs/common'
+import { AppService } from './app.service'
 // import { ElBotModule } from 'el-bot'
 import { BotsModule } from './bots/bots.module'
 import { CoreModule } from './core/core.module'
-import { AppService } from './app.service'
 
 @Module({
   imports: [

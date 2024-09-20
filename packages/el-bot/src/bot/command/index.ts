@@ -1,6 +1,6 @@
+import type { Bot } from '../../bot'
 // import { check } from 'mirai-ts'
 import consola from 'consola'
-import type { Bot } from '../../bot'
 
 /**
  * 面向用户的指令

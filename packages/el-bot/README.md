@@ -7,3 +7,12 @@
 ![node-current](https://img.shields.io/node/v/el-bot)
 
 More info see [README.md](https://github.com/YunYouJun/el-bot#readme).
+
+## Napcat
+
+> [NapCatQQ](https://napneko.github.io/zh-CN/)
+
+```bash
+# https://napneko.github.io/zh-CN/guide/getting-started
+curl -o napcat.sh https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh && sudo bash napcat.sh
+```

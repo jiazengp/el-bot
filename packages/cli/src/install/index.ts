@@ -1,5 +1,5 @@
-import { Logger } from '@yunyoujun/logger'
 import type commander from 'commander'
+import { Logger } from '@yunyoujun/logger'
 
 export default function (cli: commander.Command) {
   cli

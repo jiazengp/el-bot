@@ -1,12 +1,12 @@
-import fs from 'node:fs'
 import type { Bot } from 'el-bot'
+import type { MessageType } from 'mirai-ts'
+import type { CustomFields } from 'rss-parser'
+import fs from 'node:fs'
 import dayjs from 'dayjs'
 import { htmlToText } from 'html-to-text'
 import schedule from 'node-schedule'
-import type { CustomFields } from 'rss-parser'
-import Parser from 'rss-parser'
 
-import type { MessageType } from 'mirai-ts'
+import Parser from 'rss-parser'
 
 interface RssConfig {
   name: string
@@ -88,7 +88,7 @@ class Rss {
       Object.keys(rssJson).length === 0
       || !rssJson[this.config.name]
       || (feed.items
-      && rssJson[this.config.name].items[0].pubDate !== feed.items[0].pubDate)
+        && rssJson[this.config.name].items[0].pubDate !== feed.items[0].pubDate)
     ) {
       this.ctx.logger.info(`[rss] ${feed.title} 已更新`)
       rssJson[this.config.name] = {
@@ -144,7 +144,7 @@ function format(item: any, content: string[]) {
 
   // not use eval
   // eslint-disable-next-line no-new-func
-  return Function('item', `return \`${template}\``)(item)
+  return new Function('item', `return \`${template}\``)(item)
 }
 
 /**

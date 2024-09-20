@@ -1,11 +1,11 @@
+import type commander from 'commander'
 import { spawn } from 'node:child_process'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import type commander from 'commander'
 import { Logger } from '@yunyoujun/logger'
-import shell from 'shelljs'
 import { utils } from 'el-bot'
+import shell from 'shelljs'
 
 // 实例目录下的 package.json
 // eslint-disable-next-line ts/no-require-imports

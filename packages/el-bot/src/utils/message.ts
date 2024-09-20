@@ -6,7 +6,7 @@
  */
 function renderString(template: string, data: any, name: string) {
   // eslint-disable-next-line no-new-func
-  return Function(name, `return \`${template}\``)(data)
+  return new Function(name, `return \`${template}\``)(data)
 }
 
 export { renderString }

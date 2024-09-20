@@ -1,6 +1,6 @@
+import type { check } from 'mirai-ts'
 import type { Document } from 'mongoose'
 import mongoose from 'mongoose'
-import type { check } from 'mirai-ts'
 
 export interface ICounter extends Document {
   /**

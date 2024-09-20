@@ -13,7 +13,7 @@ plugins.forEach((item) => {
   const source = path.resolve(__dirname, '../src/plugins/', item, 'package.json')
   const pkg = JSON.parse(fs.readFileSync(source, 'utf-8'))
   delete pkg.type
-  // eslint-disable-next-line no-console
+
   console.log(pkg)
   pkg.exports = {
     '.': {

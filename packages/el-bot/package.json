@@ -1,5 +1,6 @@
 {
   "name": "el-bot",
+  "type": "module",
   "version": "0.9.0-beta.19",
   "description": "A quick qq bot framework for mirai.",
   "author": {
@@ -26,7 +27,7 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./src/index.ts",
       "require": "./dist/index.js"
     },
     "./plugins/*": {
@@ -36,11 +37,17 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "el": "bin/el-bot.ts",
+    "el-bot": "bin/el-bot.ts"
+  },
   "files": [
-    "dist"
+    "bin",
+    "dist",
+    "src"
   ],
   "engines": {
-    "node": ">=12"
+    "node": ">=18"
   },
   "mcl": {
     "folder": "mcl"
@@ -57,10 +64,10 @@
     "@koa/cors": "^5.0.0",
     "@octokit/webhooks": "^13.3.0",
     "@octokit/webhooks-methods": "^5.1.0",
-    "c12": "^1.11.1",
+    "c12": "^1.11.2",
     "commander": "^12.1.0",
     "consola": "^3.2.3",
-    "dayjs": "^1.11.12",
+    "dayjs": "^1.11.13",
     "download": "^8.0.0",
     "fast-glob": "^3.3.2",
     "fs-extra": "^11.2.0",
@@ -69,14 +76,17 @@
     "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
     "mirai-ts": "^2.4.8",
-    "mongoose": "^8.5.3",
+    "mongoose": "^8.6.3",
+    "node-napcat-ts": "^0.2.19",
     "node-schedule": "^2.1.1",
     "progress": "^2.0.3",
     "qq-guild-bot": "^2.9.5",
     "qrcode": "^1.5.0",
     "rss-parser": "^3.13.0",
     "shelljs": "^0.8.5",
-    "winston": "^3.14.2"
+    "vite-node": "^2.1.1",
+    "winston": "^3.14.2",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/download": "^8.0.5",
@@ -85,17 +95,20 @@
     "@types/koa": "^2.15.0",
     "@types/koa-bodyparser": "^4.3.12",
     "@types/koa__cors": "^5.0.0",
-    "@types/node": "^22.4.0",
+    "@types/node": "^22.5.5",
     "@types/node-schedule": "^2.1.7",
     "@types/progress": "^2.0.7",
     "@types/qrcode": "^1.5.5",
     "@types/shelljs": "^0.8.15",
     "@types/xml2js": "^0.4.14",
+    "@types/yargs": "^17.0.33",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
-    "tsup": "^8.2.4",
-    "typedoc": "^0.26.5",
-    "typescript": "^5.5.4"
+    "esbuild": "^0.23.1",
+    "esbuild-register": "^3.6.0",
+    "tsup": "^8.3.0",
+    "typedoc": "^0.26.7",
+    "typescript": "^5.6.2"
   },
   "directories": {
     "lib": "https://github.com/YunYouJun/mirai-ts"

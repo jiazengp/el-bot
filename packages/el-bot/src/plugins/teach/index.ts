@@ -1,8 +1,8 @@
 import type { Bot } from 'el-bot'
 import type { MessageType } from 'mirai-ts'
 import type { TeachOptions } from './options'
-import { displayList } from './utils'
 import { Teach } from './teach.schema'
+import { displayList } from './utils'
 
 // implement the autoloadback referenced in loki constructor
 export default async function teach(ctx: Bot, options: TeachOptions) {
@@ -31,7 +31,7 @@ export default async function teach(ctx: Bot, options: TeachOptions) {
     if (
       qa
       && (msg.type === 'FriendMessage'
-      || (msg.type === 'GroupMessage' && msg.isAt()))
+        || (msg.type === 'GroupMessage' && msg.isAt()))
     ) {
       // 没有权限时
       if (!ctx.status.getListenStatusByConfig(msg.sender, options)) {

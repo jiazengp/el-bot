@@ -3,15 +3,17 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Basic Options */
-    "target": "ES2017",
+    "target": "ESNext",
+    "lib": [
+      "ESNext"
+    ],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "paths": {
       "el-bot": ["packages/el-bot/src/index.ts"],
-      "el-bot/*": ["packages/el-bot/*"],
       "qq-sdk": ["packages/qq-sdk/src/index.ts"]
     },
     // custom

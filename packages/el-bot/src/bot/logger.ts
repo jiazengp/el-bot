@@ -1,6 +1,6 @@
 import chalk from 'chalk'
-import winston from 'winston'
 import dayjs from 'dayjs'
+import winston from 'winston'
 
 const customLevels = {
   levels: {
@@ -29,7 +29,7 @@ export interface Logger extends winston.Logger {
  * 创建日志工具，基于 winston
  * @param label
  */
-export function createLogger(label = 'el-bot') {
+export function createLogger(label = 'el') {
   const logger = winston.createLogger({
     levels: customLevels.levels,
     transports: [
@@ -40,6 +40,9 @@ export function createLogger(label = 'el-bot') {
       }),
     ],
     format: winston.format.combine(
+      winston.format.padLevels({
+        levels: customLevels.levels,
+      }),
       winston.format.colorize({
         colors: customLevels.colors,
       }),

@@ -1,8 +1,8 @@
 import type { Bot } from 'el-bot'
-import { utils } from 'el-bot'
-import * as sagiri from 'sagiri'
 import type { MessageType } from 'mirai-ts'
+import { utils } from 'el-bot'
 import { Message } from 'mirai-ts'
+import * as sagiri from 'sagiri'
 
 /**
  * 搜图设置

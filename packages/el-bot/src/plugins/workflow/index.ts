@@ -1,5 +1,5 @@
-import fs from 'node:fs'
 import type { Bot } from 'el-bot'
+import fs from 'node:fs'
 
 /**
  * ref github actions
@@ -7,8 +7,8 @@ import type { Bot } from 'el-bot'
  */
 
 import type { EventType, MessageType } from 'mirai-ts'
-import * as shelljs from 'shelljs'
 import schedule from 'node-schedule'
+import * as shelljs from 'shelljs'
 import { parseYaml } from '../../utils/config'
 import { handleError } from '../../utils/error'
 
