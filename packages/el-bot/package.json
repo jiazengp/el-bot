@@ -52,12 +52,8 @@
     "folder": "mcl"
   },
   "scripts": {
-    "build": "tsup && npm run copy:pkg",
     "build:api": "npx typedoc",
-    "copy:pkg": "tsx scripts/copy.ts",
-    "dev": "npm run watch",
-    "watch": "tsup --watch",
-    "prepublishOnly": "npm run build"
+    "dev": "npm run watch"
   },
   "dependencies": {
     "@koa/cors": "^5.0.0",
