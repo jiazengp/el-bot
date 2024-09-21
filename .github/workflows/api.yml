@@ -3,23 +3,25 @@ on:
   push:
     branches:
       - dev
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          run_install: true
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: lts/*
 
-      # fix pnpm install
-      - name: pnpm - output bin stubs
-        run: npx esno scripts/fix-pnpm.ts
-
-      - run: npm i -g pnpm && pnpm i
-      - run: pnpm run build:api
+      - name: Build API
+        run: pnpm run build:api
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

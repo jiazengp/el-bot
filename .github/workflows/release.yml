@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
           run_install: true
 
@@ -30,9 +30,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: pnpm
 
-      - run: pnpm run build:all
-      # https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-      - run: npm run ci:publish
+      - run: pnpm -C packages/el-bot publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           NPM_CONFIG_PROVENANCE: true
