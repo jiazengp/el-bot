@@ -40,8 +40,10 @@
   },
   "files": [
     "bin",
-    "dist",
-    "src"
+    "core",
+    "node",
+    "plugins",
+    "types"
   ],
   "engines": {
     "node": ">=18"
