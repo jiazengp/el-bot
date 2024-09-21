@@ -13,7 +13,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "paths": {
-      "el-bot": ["packages/el-bot/src/index.ts"],
+      "el-bot": ["packages/el-bot/index.ts"],
       "qq-sdk": ["packages/qq-sdk/src/index.ts"]
     },
     // custom

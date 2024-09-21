@@ -24,7 +24,7 @@
     "el-bot-web": "https://github.com/ElpsyCN/el-bot-web"
   },
   "scripts": {
-    "build": "npm run build:bot",
+    "build": "",
     "build:lib": "pnpm -C packages/el-bot run build",
     "build:demo": "pnpm run build -C demo",
     "build:api": "pnpm -C packages/el-bot run build:api",
