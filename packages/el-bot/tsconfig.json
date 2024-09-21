@@ -9,6 +9,9 @@
       "el-bot": ["src/index.ts"]
     },
     "resolveJsonModule": true,
+    "types": [
+      "vite/client"
+    ],
     "strict": true,
     "strictNullChecks": true,
     "noEmit": true,

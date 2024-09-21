@@ -1,18 +1,18 @@
-import type commander from 'commander'
 import type mongoose from 'mongoose'
 import type { Server } from 'node:net'
 import type { ElConfig, ElUserConfig } from '../config/el'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import { NCWebsocket } from 'node-napcat-ts'
+import { GroupMessage, NCWebsocket, PrivateMessage, Send, Structs } from 'node-napcat-ts'
+import colors from 'picocolors'
 import { resolveElConfig } from '../config/el'
+
 import { connectDb } from '../db'
 
 import { isFunction } from '../shared'
 import { handleError } from '../utils/error'
 import { statement } from '../utils/misc'
-import { initCli } from './cli'
 import { Command } from './command'
 import { Plugins } from './plugins'
 import { Sender } from './sender'
@@ -25,12 +25,13 @@ import Webhook from './webhook'
 // node
 
 // type
-import type { Plugin, PluginInstallFunction } from './plugins'
+import type { Plugin, PluginInstallFunction } from './plugins/class'
 import consola from 'consola'
+import yargs from 'yargs'
 import { logger } from './logger'
 
-// export
 export * from './logger'
+export * from './plugins'
 
 /**
  * 创建机器人
@@ -59,6 +60,11 @@ export class Bot {
   napcat: NCWebsocket
 
   /**
+   * webhook server
+   */
+  server?: Server
+
+  /**
    * 状态
    */
   status: Status
@@ -81,7 +87,14 @@ export class Bot {
   /**
    * 面向开发者的指令系统
    */
-  cli: commander.Command
+  cli = yargs()
+    .scriptName('el')
+    .usage('Usage: $0 <command> [options]')
+    .version()
+    .alias('h', 'help')
+    .alias('v', 'version')
+    .help()
+
   /**
    * 面向用户的指令系统
    */
@@ -110,7 +123,7 @@ export class Bot {
     if (this.el.webhook && this.el.webhook.enable)
       this.webhook = new Webhook(this)
 
-    this.cli = initCli(this, 'el')
+    // this.cli = initCli(this, 'el')
 
     // report error to qq
     if (this.el.report?.enable) {
@@ -135,35 +148,55 @@ export class Bot {
   /**
    * 机器人当前消息 快捷回复
    */
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  reply(msgChain: string, quote = false) {
-    // if (this.mirai.curMsg && this.mirai.curMsg.reply) {
-    //   return this.mirai.curMsg.reply(msgChain, quote)
-    // }
-    // else {
-    //   this.logger.error('当前消息不存在')
-    //   return false
-    // }
+
+  reply(rawMsg: PrivateMessage | GroupMessage, msg: Send[keyof Send][], quote = false) {
+    const napcat = this.napcat
+
+    // 引用消息
+    if (quote) {
+      msg.unshift(Structs.reply(rawMsg.message_id))
+    }
+
+    if (rawMsg.sender.user_id) {
+      // 私聊
+      if (rawMsg.message_type === 'private') {
+        return napcat.send_private_msg({
+          user_id: rawMsg.sender.user_id,
+          message: msg,
+        })
+      }
+      // 群聊
+      else if (rawMsg.message_type === 'group') {
+        return napcat.send_group_msg({
+          group_id: rawMsg.group_id,
+          message: msg,
+        })
+      }
+    }
   }
 
   /**
    * 启动机器人
    */
   async start() {
-    if (!this.isDev)
-      statement(this)
+    await statement()
 
     // 连接数据库
     if (this.el.db?.enable)
       await connectDb(this, this.el.db)
 
     await this.napcat.connect()
-    logger.success('NapcatQQ connected!')
+    const data = await this.napcat.get_version_info()
+    consola.success(`${data.app_name} ${colors.yellow(data.app_version)} ${colors.cyan(data.protocol_version)} connected!`)
 
     // get login info
-    const data = await this.napcat.get_login_info()
-    consola.log('')
-    consola.info('当前登录账号：', data)
+    try {
+      const data = await this.napcat.get_login_info()
+      consola.info('当前登录账号:', `${colors.yellow(data.nickname)}(${colors.cyan(data.user_id)})`)
+    }
+    catch (err) {
+      handleError(err)
+    }
 
     // // mah about
     // try {
@@ -186,26 +219,10 @@ export class Bot {
     await this.plugins.load('official')
     await this.plugins.load('community')
 
+    // 自动加载自定义插件
     if (this.el.bot.autoloadPlugins) {
-      try {
-        // const allCustomPlugins = getAllPlugins(
-        //   resolve(
-        //     this.rootDir,
-        //     (this.isTS ? 'src/' : '') + this.el.bot.pluginDir,
-        //   ),
-        // )
-        // this.el.bot.plugins!.custom = allCustomPlugins.map(path =>
-        //   resolve((this.isTS ? 'dist/' : '') + this.el.bot.pluginDir, path),
-        // )
-      }
-      catch (e: any) {
-        this.logger.error(
-          `无法加载 plugins ${this.el.bot.pluginDir} 目录，请检查 'bot.pluginDir' 配置`,
-        )
-        consola.error(e)
-      }
+      await this.plugins.loadCustom(this.el.bot.pluginDir)
     }
-    await this.plugins.load('custom')
     consola.log('')
     consola.success('插件加载完成')
     consola.log('')
@@ -214,35 +231,44 @@ export class Bot {
     this._command.listen()
 
     // 启动 webhook
-    let server: Server | undefined
     if (this.el.webhook && this.el.webhook.enable) {
       try {
-        server = this.webhook?.start()
+        this.server = this.webhook?.start()
       }
       catch (err: any) {
-        handleError(err, this.logger)
+        handleError(err)
       }
     }
 
-    // 退出信息
-    process.on('exit', () => {
-      // 关闭数据库连接
-      if (this.db) {
-        this.db.close()
-        this.logger.info('[db] 关闭数据库连接')
-      }
-
-      // close koa server
-      if (this.el.webhook && this.el.webhook.enable) {
-        if (server) {
-          server.close()
-          this.logger.info('[webhook] 关闭 Server')
-        }
-      }
-
-      this.logger.warning('Bye, Master!')
-      // this.mirai.release()
+    // 意外退出
+    process.on('SIGINT', () => {
+      this.stop()
+      process.exit(0)
     })
+  }
+
+  /**
+   * 停止机器人
+   */
+  async stop() {
+    this.napcat.disconnect()
+
+    // 关闭数据库连接
+    if (this.db) {
+      this.db.close()
+      this.logger.info('[db] 关闭数据库连接')
+    }
+
+    // close koa server
+    if (this.el.webhook && this.el.webhook.enable) {
+      if (this.server) {
+        this.server.close()
+        this.logger.info('[webhook] 关闭 Server')
+      }
+    }
+
+    this.logger.success('Bye, Master!')
+    consola.log('')
   }
 
   /**

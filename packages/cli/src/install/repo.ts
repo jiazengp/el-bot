@@ -1,10 +1,10 @@
 import fs from 'node:fs'
-import { Logger } from '@yunyoujun/logger'
 import axios from 'axios'
 import download from 'download'
+import { createLogger } from 'packages/el-bot'
 import ProgressBar from 'progress'
 
-const logger = new Logger({ prefix: '[cli(repo)]' })
+const logger = createLogger().child({ label: '📦' })
 
 /**
  * Repo 类

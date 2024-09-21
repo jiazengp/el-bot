@@ -6,6 +6,7 @@ import { version } from '../../package.json'
 import { registerDevCommand } from './commands/dev'
 
 export const cli = yargs(hideBin(process.argv))
+  .scriptName('el')
   .scriptName('el-bot')
   .usage('Usage: $0 <command> [options]')
   .version(version)

@@ -1,7 +1,9 @@
-import type { Bot } from 'el-bot'
-import fs from 'node:fs'
 import process from 'node:process'
-import chalk from 'chalk'
+import consola from 'consola'
+
+import colors from 'picocolors'
+
+import pkg from '../../package.json'
 
 /**
  * 是否为开发模式
@@ -19,29 +21,15 @@ export async function sleep(ms: number): Promise<void> {
 /**
  * 声明
  */
-export function statement(ctx: Bot) {
-  const pkg = ctx.el.pkg
+export async function statement() {
+  consola.debug(`Docs: ${colors.dim(pkg.homepage)}`)
+  consola.debug(`GitHub: ${colors.dim(pkg.repository.url)}`)
+  consola.info(`El Bot: ${colors.cyan(`v${pkg.version}`)}`)
+  const napcatTSVersion = (pkg.dependencies || {})['node-napcat-ts']
+  if (napcatTSVersion) {
+    const { version } = (await import('node-napcat-ts/package.json'))
+    consola.info(`napcat-node-ts: ${colors.cyan(`v${version}`)}`)
+  }
   // eslint-disable-next-line no-console
-  console.log('-----------------------------------------------')
-  ctx.logger.info(`Docs: ${pkg.homepage}`)
-  ctx.logger.info(`GitHub: ${pkg.repository.url}`)
-  ctx.logger.info(`El-Bot Version: ${chalk.cyan(pkg.version)}`)
-  // eslint-disable-next-line no-console
-  console.log('-----------------------------------------------')
-}
-
-/**
- * 获取目录下的所有插件
- * @param dir
- */
-export function getAllPlugins(dir: string): string[] {
-  const plugins = fs.readdirSync(dir)
-
-  return plugins.map((plugin) => {
-    const extPos = plugin.lastIndexOf('.')
-    if (extPos !== -1)
-      return plugin.slice(0, extPos)
-    else
-      return plugin
-  })
+  console.log('')
 }

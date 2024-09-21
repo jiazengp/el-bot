@@ -1,7 +1,9 @@
-import type commander from 'commander'
-import { Logger } from '@yunyoujun/logger'
+import { logger } from 'packages/el-bot'
 
-export default function (cli: commander.Command) {
+/**
+ * @deprecated
+ */
+export default function (cli: any) {
   cli
     .command('install [project]')
     .description('安装依赖')
@@ -12,10 +14,9 @@ export default function (cli: commander.Command) {
     })
 }
 
-const logger = new Logger({ prefix: '[cli(install)]' })
-
 /**
  * 安装 mirai
+ * @deprecated
  */
 function installMirai() {
   logger.warning(

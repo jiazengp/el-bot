@@ -1,4 +1,4 @@
-#!/usr/bin/env vite-node --script
+#!/usr/bin/env vite-node --watch --script
 
 import { run } from '../node'
 

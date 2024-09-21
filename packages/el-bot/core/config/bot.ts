@@ -13,6 +13,7 @@ export interface BotConfig {
   autoloadPlugins: boolean
   /**
    * 默认自动加载插件的目录
+   * @default 'bot/plugins'
    */
   pluginDir: string
 

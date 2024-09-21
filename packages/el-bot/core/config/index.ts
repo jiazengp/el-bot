@@ -8,7 +8,8 @@ import { createLogger } from '../bot/logger/winston'
 export * from './bot'
 export * from './el'
 
-const logger = createLogger('[config]')
+// config
+const logger = createLogger().child({ label: '⚙️' })
 
 /**
  * 从文件加载配置

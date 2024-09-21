@@ -26,16 +26,13 @@
     "framework"
   ],
   "exports": {
+    "./*": "./*",
     ".": {
-      "import": "./src/index.ts",
+      "import": "./index.ts",
       "require": "./dist/index.js"
-    },
-    "./plugins/*": {
-      "import": "./dist/plugins/*/index.mjs",
-      "require": "./dist/plugins/*/index.js"
     }
   },
-  "main": "dist/index.js",
+  "main": "./index.ts",
   "types": "dist/index.d.ts",
   "bin": {
     "el": "bin/el-bot.ts",
@@ -82,7 +79,7 @@
     "picocolors": "^1.1.0",
     "progress": "^2.0.3",
     "qq-guild-bot": "^2.9.5",
-    "qrcode": "^1.5.0",
+    "qrcode": "^1.5.4",
     "rss-parser": "^3.13.0",
     "shelljs": "^0.8.5",
     "vite-node": "^2.1.1",

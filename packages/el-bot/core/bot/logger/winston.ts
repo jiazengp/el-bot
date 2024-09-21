@@ -39,6 +39,10 @@ export function createLogger() {
       }),
     ],
     format: winston.format.combine(
+      winston.format((info) => {
+        info.level = info.level.toUpperCase()
+        return info
+      })(),
       winston.format.padLevels({
         levels: customLevels.levels,
       }),
@@ -46,12 +50,14 @@ export function createLogger() {
         colors: customLevels.colors,
       }),
       winston.format.timestamp(),
-      winston.format.printf(({ level, message, label, timestamp }) => {
-        const namespace = `${chalk.cyan(`[${label}]`)}`
+      winston.format.printf(({ level, message, label, timestamp, plugin }) => {
+        const namespace = `${chalk.cyan(`${label}`)}`
+        const pluginPrefix = plugin ? chalk.magenta(`[${plugin}] `) : ''
+        const printedMessage = message instanceof Object ? JSON.stringify(message, null, 2) : message
         const content = [
           namespace,
           chalk.yellow(`[${dayjs(timestamp).format('HH:mm:ss')}]`),
-          `[${level}]${message}`,
+          `${pluginPrefix}[${level}]${printedMessage}`,
         ]
         return content.join(' ')
       }),

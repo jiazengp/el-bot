@@ -10,5 +10,12 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 3001,
     accessToken: 'yunyoujun',
+
+    // ↓ 自动重连(可选)
+    reconnection: {
+      enable: true,
+      attempts: 10,
+      delay: 5000,
+    },
   },
 })

@@ -1,4 +1,3 @@
-import type { Target } from '../../types/config'
 import type { WebhookConfig } from '../bot/webhook'
 import type { BotConfig, BotUserConfig } from './bot'
 import fs from 'node:fs'
@@ -6,10 +5,11 @@ import { resolve } from 'node:path'
 import process from 'node:process'
 // import type { MiraiApiHttpSetting } from 'mirai-ts'
 import { NCWebsocketOptions } from 'node-napcat-ts'
+import { Target } from '../../types'
+
 import { mergeConfig } from '../utils/config'
 
 const assetsFolder = 'data/net.mamoe.mirai-api-http'
-
 export interface dbConfig {
   /**
    * 是否启用
@@ -113,11 +113,16 @@ export function resolveElConfig(userConfig: ElUserConfig) {
     folder: 'mcl',
   }
   const defaultElConfig: ElConfig = {
-    qq: 0,
     // setting: '../mcl/config/net.mamoe.mirai-api-http/setting.yml',
     mirai: miraiConfig,
     db: {
       enable: false,
+    },
+    napcat: {
+      protocol: 'ws',
+      host: '127.0.0.1',
+      port: 3001,
+      accessToken: '',
     },
     bot: {
       name: 'el-bot',
@@ -134,7 +139,7 @@ export function resolveElConfig(userConfig: ElUserConfig) {
         ],
       },
       autoloadPlugins: true,
-      pluginDir: 'plugins',
+      pluginDir: 'bot/plugins',
       master: [910426929],
       admin: [910426929],
       devGroup: 120117362,
@@ -157,8 +162,6 @@ export function resolveElConfig(userConfig: ElUserConfig) {
 
   // 合并
   const config = mergeConfig(defaultElConfig, userConfig) as ElConfig
-  if (typeof config.qq === 'string')
-    config.qq = Number.parseInt(config.qq)
 
   config.pkg = pkg
   config.path.image = resolve(config.base, config.mirai.folder, `${assetsFolder}/images`)

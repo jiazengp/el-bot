@@ -1,13 +1,15 @@
 import path from 'node:path'
 import process from 'node:process'
+import consola from 'consola'
 import fs from 'fs-extra'
 import colors from 'picocolors'
-import { type Bot, logger } from '.'
-import { isFunction } from '../shared'
-import { merge } from '../utils/config'
+import { type Bot, BotPlugin, logger } from '..'
+import { isFunction } from '../../shared'
 
-import { handleError } from '../utils/error'
-import { pluginLogger } from './logger'
+import { merge } from '../../utils/config'
+import { handleError } from '../../utils/error'
+import { pluginLogger } from '../logger'
+import { getAllPlugins } from './utils'
 
 export type PluginInstallFunction = (ctx: Bot, ...options: any[]) => any
 
@@ -90,11 +92,10 @@ export class Plugins {
       for (const name of botConfig.plugins[type]) {
         const pkgName = this.getPluginFullName(name, type)
         // colorize
-        const cPluginName = colors.cyan(name)
         const cPluginType = colors.dim(type)
 
         try {
-          const pluginPath = type === 'default' ? `../../plugins/${pkgName}` : pkgName
+          const pluginPath = type === 'default' ? `../../../plugins/${pkgName}` : pkgName
           const suffix = 'ts'
           const importedPath = await fs.exists(`${pluginPath}.${suffix}`) ? `${pluginPath}.${suffix}` : `${pluginPath}/index.${suffix}`
           const { default: plugin } = await import(importedPath)
@@ -129,13 +130,46 @@ export class Plugins {
               install: plugin,
             })
 
-            pluginLogger.success(`${cPluginType} ${cPluginName} 加载成功`)
+            pluginLogger
+              .child({ plugin: name })
+              .success(`${cPluginType} 加载成功`)
           }
         }
         catch (err: any) {
           handleError(err as Error)
-          pluginLogger.error(`${cPluginType} ${cPluginName} 加载失败`)
+          pluginLogger
+            .child({ plugin: name })
+            .error(`${cPluginType} 加载失败`)
         }
+      }
+    }
+  }
+
+  /**
+   * 加载自定义插件
+   */
+  async loadCustom(pluginDir: string) {
+    if (!pluginDir) {
+      pluginLogger.warning('未配置自定义插件目录')
+    }
+    else {
+      consola.log('')
+      const absolutePluginDir = path.resolve(process.cwd(), pluginDir)
+      consola.info(`自定义插件目录: ${colors.cyan(absolutePluginDir)}`)
+
+      const customPlugins = await getAllPlugins(absolutePluginDir)
+      for (const customPluginName of customPlugins) {
+        const pluginPath = path.resolve(absolutePluginDir, `${customPluginName}.ts`)
+        const importedCustomPlugin = (await import(pluginPath)).default
+        let customPlugin: BotPlugin
+        if (typeof importedCustomPlugin === 'function') {
+          // TODO: 传入配置 options
+          customPlugin = importedCustomPlugin({})
+        }
+        else {
+          customPlugin = importedCustomPlugin
+        }
+        await customPlugin.setup(this.ctx)
       }
     }
   }

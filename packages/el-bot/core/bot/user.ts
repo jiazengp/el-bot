@@ -1,4 +1,5 @@
 import type { Bot } from '.'
+import consola from 'consola'
 
 export class User {
   constructor(public ctx: Bot) {}
@@ -35,8 +36,10 @@ export class User {
     }
 
     const allowFlag = this.isMaster(qq) || this.isAdmin(qq)
-    if (!allowFlag && reply)
-      this.ctx.reply(content)
+    if (!allowFlag && reply) {
+      // TODO reply
+      consola.warn(content)
+    }
 
     return allowFlag
   }

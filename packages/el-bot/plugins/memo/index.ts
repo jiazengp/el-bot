@@ -1,11 +1,7 @@
-import type { MessageType } from 'mirai-ts'
 import type { Bot } from '../../core'
 import type { IMemo } from './memo.schema'
-import dayjs from 'dayjs'
-import schedule from 'node-schedule'
+import consola from 'consola'
 import { pluginLogger } from '../../core'
-import { Memo } from './memo.schema'
-import { checkTime, parseTime } from './utils'
 
 /**
  * 初始化 collection
@@ -13,6 +9,7 @@ import { checkTime, parseTime } from './utils'
 async function initCollection(ctx: Bot) {
   if (!ctx.db)
     return
+  const { Memo } = await import('./memo.schema')
   const memos = await Memo.find({
     $or: [
       {
@@ -33,21 +30,7 @@ async function initCollection(ctx: Bot) {
   return memos
 }
 
-/**
- * cli
- * @param ctx
- */
-function initCli(ctx: Bot) {
-  const { cli } = ctx
-  cli
-    .command('memo')
-    .description('备忘录')
-    .option('-f, --format', '格式提示')
-    .option('-t, --time <time...>', '时间，cron 或 date 格式')
-    .option('-c, --content <content...>', '提示内容')
-    .action((options) => {
-      if (options.format) {
-        ctx.reply(`
+export const tooltip = `
 *    *    *    *    *    *
 ┬    ┬    ┬    ┬    ┬    ┬
 │    │    │    │    │    │
@@ -63,85 +46,117 @@ function initCli(ctx: Bot) {
 
 'el memo -t 2020-09-23 17:48:00 -c hello': 2020-09-23 17:48:00 向我发送 hello 信息
 'el memo -t 10m -c hello': 十分钟后向我发送 hello 信息
-`)
-      }
+`
 
-      if (options.time && options.content) {
-        let time = dayjs()
-        const content = options.content.join(' ')
-        let isCron = false
-        if (options.time.length === 1) {
-          const delay = parseTime(options.time)
-          if (delay) {
-            time = dayjs()
-              .add(delay.day, 'day')
-              .add(delay.hour, 'hour')
-              .add(delay.minute, 'minute')
-          }
-          else {
-            ctx.reply('无法解析正确的定时，示例：1d1h1m')
-            return
-          }
-        }
-        else if (options.time.length === 2) {
-          // 从格式解析时间
-          time = dayjs(options.time.join(' '), 'YYYY-MM-DD HH:mm:ss')
-        }
-        else if (options.time.length === 5) {
-          // cron
-          isCron = true
-        }
-        else {
-          ctx.reply('格式不正确')
-          return
-        }
-
-        if (!checkTime(time.toDate())) {
-          ctx.reply('时间期限不得超过一年')
-          return
-        }
-
-        const memo: IMemo = new Memo({
-          time: isCron ? options.time.join(' ') : time.toDate(),
-          content,
+/**
+ * cli
+ * @param ctx
+ */
+function initCli(ctx: Bot) {
+  const { cli } = ctx
+  cli
+    .command('memo', '备忘录', (args) => {
+      return args
+        .option('format', {
+          alias: 'f',
+          type: 'string',
+          description: '格式提示',
         })
-        const msg = ctx.mirai.curMsg as MessageType.ChatMessage
-        memo.friend = msg.sender.id
-        if ((msg as MessageType.GroupMessage).sender.group)
-          memo.group = (msg as MessageType.GroupMessage).sender.group.id
-
-        addSchedule(ctx, memo)
-        memo.save()
-        const future = time.format('YYYY-MM-DD ddd HH:mm:ss')
-        ctx.reply(
-          `好的，我将在 ${isCron ? memo.time : future} 提醒你 ${content}。`,
-        )
+        .option('time', {
+          alias: 't',
+          type: 'array',
+          description: '时间，cron 或 date 格式',
+        })
+        .option('content', {
+          alias: 'c',
+          type: 'string',
+          description: '提示内容',
+        })
+        .strict()
+        .help()
+    }, ({ format, time, content }) => {
+      consola.info('memo', format, time, content)
+      if (format) {
+        // ctx.reply()
       }
+
+      //   if (time && content) {
+      //     let now = dayjs()
+      //     let isCron = false
+      //     if (time.length === 1) {
+      //       const delay = parseTime(time)
+      //       if (delay) {
+      //         now = dayjs()
+      //           .add(delay.day, 'day')
+      //           .add(delay.hour, 'hour')
+      //           .add(delay.minute, 'minute')
+      //       }
+      //       else {
+      //         ctx.reply('无法解析正确的定时，示例：1d1h1m')
+      //         return
+      //       }
+      //     }
+      //     else if (time.length === 2) {
+      //       // 从格式解析时间
+      //       now = dayjs(time.join(' '), 'YYYY-MM-DD HH:mm:ss')
+      //     }
+      //     else if (time.length === 5) {
+      //       // cron
+      //       isCron = true
+      //     }
+      //     else {
+      //       ctx.reply('格式不正确')
+      //       return
+      //     }
+
+      //     if (!checkTime(now.toDate())) {
+      //       ctx.reply('时间期限不得超过一年')
+      //       return
+      //     }
+
+      //     const memo: IMemo = new Memo({
+      //       time: isCron ? options.time.join(' ') : now.toDate(),
+      //       content,
+      //     })
+      //     const msg = ctx.mirai.curMsg as MessageType.ChatMessage
+      //     memo.friend = msg.sender.id
+      //     if ((msg as MessageType.GroupMessage).sender.group)
+      //       memo.group = (msg as MessageType.GroupMessage).sender.group.id
+
+    //     addSchedule(ctx, memo)
+    //     memo.save()
+    //     const future = time.format('YYYY-MM-DD ddd HH:mm:ss')
+    //     ctx.reply(
+    //       `好的，我将在 ${isCron ? memo.time : future} 提醒你 ${content}。`,
+    //     )
+    //   }
+    // })
     })
 }
 
 /**
  * 初始化定时器
- * @param ctx
  */
-function addSchedule(ctx: Bot, memo: IMemo) {
-  const { mirai } = ctx
-  const msg = mirai.curMsg
-  schedule.scheduleJob(memo.time, () => {
-    if (memo.group)
-      mirai.api.sendGroupMessage(memo.content, memo.group)
-    else if (memo.friend)
-      mirai.api.sendFriendMessage(memo.content, memo.friend)
-    else if (msg)
-      (msg as MessageType.ChatMessage).reply(memo.content)
-  })
+function addSchedule(_ctx: Bot, _memo: IMemo) {
+  // const { mirai } = ctx
+  // const msg = mirai.curMsg
+  // schedule.scheduleJob(memo.time, () => {
+  //   if (memo.group)
+  //     mirai.api.sendGroupMessage(memo.content, memo.group)
+  //   else if (memo.friend)
+  //     mirai.api.sendFriendMessage(memo.content, memo.friend)
+  //   else if (msg)
+  //     (msg as MessageType.ChatMessage).reply(memo.content)
+  // })
 }
 
 export default function (ctx: Bot) {
   if (!ctx.db) {
-    pluginLogger.warning(
-      '[memo] 因为你尚未开启数据库，备注信息将会在机器人重启后丢失。',
-    )
+    pluginLogger
+      .child({ plugin: 'memo' })
+      .warning(
+        '因为你尚未开启数据库，备注信息将会在机器人重启后丢失。',
+      )
   }
   // init collection
   initCollection(ctx)

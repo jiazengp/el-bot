@@ -1,7 +1,12 @@
+import { exec } from 'node:child_process'
+import path from 'node:path'
 import consola from 'consola'
 import { Argv } from 'yargs'
-import { createBot } from '../../../core'
+import { Bot, createBot, ElUserConfig } from '../../../core'
 import { commonOptions } from '../options'
+import { bindShortcut } from '../utils'
+
+let bot: Bot
 
 /**
  * el-bot dev .
@@ -20,25 +25,48 @@ export function registerDevCommand(cli: Argv) {
         })
         .strict()
         .help(),
-    async (_argv) => {
+    async ({ root }) => {
       consola.start('Link Start ...')
       consola.log('')
-      const bot = createBot({
-        napcat: {
-          protocol: 'ws',
-          host: '127.0.0.1',
-          port: 3001,
-          accessToken: '',
 
-          // ↓ 自动重连(可选)
-          reconnection: {
-            enable: true,
-            attempts: 10,
-            delay: 5000,
+      // resolve el-bot.config.ts
+      const elConfigFile = path.resolve(root, 'el-bot.config.ts')
+      const config = (await import(elConfigFile)).default as ElUserConfig
+
+      bot = createBot(config)
+      await bot.start()
+
+      const SHORTCUTS = [
+        {
+          name: 'r',
+          fullName: 'restart',
+          async action() {
+            await bot.stop()
+            await bot.start()
           },
         },
-      })
-      bot.start()
+        {
+          name: 'e',
+          fullName: 'edit',
+          action() {
+            exec(`code "${root}"`)
+          },
+        },
+      ]
+      bindShortcut(SHORTCUTS)
     },
   )
+}
+
+// for vite hmr
+if (import.meta.hot) {
+  consola.success('[el-bot] HMR')
+  const close = async () => {
+    await bot?.stop()
+
+    // hmr
+    consola.success('[el-bot] HMR')
+  }
+  import.meta.hot.on('vite:beforeFullReload', close)
+  import.meta.hot.dispose(close)
 }

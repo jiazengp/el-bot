@@ -5,7 +5,7 @@ import type commander from 'commander'
  */
 import type { Bot } from 'el-bot'
 import type { MessageType } from 'mirai-ts'
-import type { PluginType } from '../plugins'
+import type { PluginType } from '../plugins/class'
 import { Command } from 'commander'
 import * as shell from 'shelljs'
 import { aboutInfo } from './utils'

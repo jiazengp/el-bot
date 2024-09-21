@@ -1,9 +1,11 @@
 import type { Server } from 'node:net'
-import type { Bot } from '..'
 import events from 'node:events'
 import cors from '@koa/cors'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
+import colors from 'picocolors'
+import { type Bot, logger } from '..'
+
 import { handleError } from '../../utils/error'
 // import * as octokit from '@octokit/webhooks'
 // import { githubHandler } from './github-handler'
@@ -41,6 +43,7 @@ export default class Webhook {
   config: WebhookConfig
   emitter: events.EventEmitter
 
+  server?: Server
   // githubHandler: octokit.Webhooks<any>
 
   // middleware: (
@@ -78,17 +81,27 @@ export default class Webhook {
       this.parse(ctx)
     })
 
-    let server: Server | undefined
+    if (this.server) {
+      this.server.close()
+    }
+
     try {
-      server = app.listen(this.config.port)
+      this.server = app.listen(this.config.port)
       this.ctx.logger.success(
-        `Webhook Listening localhost:${this.config.port}`,
+        `Webhook Listening ${colors.cyan(`http://localhost:${this.config.port}`)}`,
       )
     }
     catch (err) {
-      handleError(err, this.ctx.logger)
+      handleError(err)
     }
-    return server
+    return this.server
+  }
+
+  stop() {
+    if (this.server) {
+      this.server?.close()
+      logger.success('Webhook 服务已关闭')
+    }
   }
 
   /**

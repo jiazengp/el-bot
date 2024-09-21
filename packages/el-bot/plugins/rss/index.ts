@@ -1,11 +1,11 @@
-import type { Bot } from 'el-bot'
-import type { MessageType } from 'mirai-ts'
 import type { CustomFields } from 'rss-parser'
 import fs from 'node:fs'
+import consola from 'consola'
 import dayjs from 'dayjs'
+import { type Bot, defineBotPlugin } from 'el-bot'
 import { htmlToText } from 'html-to-text'
-import schedule from 'node-schedule'
 
+import schedule from 'node-schedule'
 import Parser from 'rss-parser'
 
 interface RssConfig {
@@ -152,7 +152,7 @@ function format(item: any, content: string[]) {
  * @param ctx
  * @param options
  */
-function triggerRss(ctx: Bot, options: RssConfig[]) {
+export function triggerRss(ctx: Bot, options: RssConfig[]) {
   ctx.logger.success('[rss] 立即触发 RSS 抓取')
   let content = '您当前订阅的所有 RSS 源：'
 
@@ -167,44 +167,62 @@ function triggerRss(ctx: Bot, options: RssConfig[]) {
 
 export type RssOptions = RssConfig[]
 
-export default function (ctx: Bot, options: RssOptions) {
-  const { cli, mirai } = ctx
-  const rssOptions = options
-
-  cli
-    .command('rss')
-    .description('RSS 订阅')
-    .option('-l, --list <type>', '订阅列表', 'current')
-    .action((cmdOptions) => {
-      const content = triggerRss(ctx, rssOptions)
-      const msg = mirai.curMsg as MessageType.GroupMessage
-      if (cmdOptions.list === 'current' && msg.sender.group) {
-        // 列出当前群 rss 订阅
-        let rssList = ''
-        let count = 0
-        options.forEach((rssConfig: RssConfig) => {
-          if (ctx.status.isListening(msg.sender, rssConfig.target)) {
-            count += 1
-            rssList += `\n${rssConfig.name}: ${rssConfig.url}`
-          }
+export default defineBotPlugin<RssOptions>((options) => {
+  return {
+    extendCli(cli) {
+      cli
+        .command('rss', 'RSS 订阅', (args) => {
+          return args
+            .option('trigger', {
+              alias: 't',
+              type: 'boolean',
+              describe: '立即触发 RSS 抓取',
+            })
+            .option('list', {
+              alias: 'l',
+              type: 'string',
+              describe: '订阅列表',
+            })
+        }, ({ trigger, list }) => {
+          consola.info(trigger, list)
+        // const content = triggerRss(ctx, rssOptions)
+        // const msg = mirai.curMsg as MessageType.GroupMessage
+        // if (cmdOptions.list === 'current' && msg.sender.group) {
+        // // 列出当前群 rss 订阅
+        //   let rssList = ''
+        //   let count = 0
+        //   options.forEach((rssConfig: RssConfig) => {
+        //     if (ctx.status.isListening(msg.sender, rssConfig.target)) {
+        //       count += 1
+        //       rssList += `\n${rssConfig.name}: ${rssConfig.url}`
+        //     }
+        //   })
+        //   if (count !== 0)
+        //     msg.reply(`本群共订阅了 ${count} 个 RSS 源：${rssList}`)
+        //   else
+        //     msg.reply('本群尚未订阅 RSS')
+        // }
+        // else if (cmdOptions.list === 'all') {
+        // // 列出所有 rss 订阅
+        //   if (ctx.user.isAllowed(msg.sender.id, true))
+        //     msg.reply(content)
+        // }
         })
-        if (count !== 0)
-          msg.reply(`本群共订阅了 ${count} 个 RSS 源：${rssList}`)
-        else
-          msg.reply('本群尚未订阅 RSS')
-      }
-      else if (cmdOptions.list === 'all') {
-        // 列出所有 rss 订阅
-        if (ctx.user.isAllowed(msg.sender.id, true))
-          msg.reply(content)
-      }
-    })
+    },
 
-  // 初始化定时
-  if (options) {
-    options.forEach((rssConfig: RssConfig) => {
-      const rss = new Rss(ctx, rssConfig)
-      rss.init()
-    })
+    setup(ctx) {
+      // const { cli, napcat } = ctx
+      const rssOptions = options
+
+      consola.log(rssOptions)
+
+      // 初始化定时
+      if (options) {
+        options.forEach((rssConfig: RssConfig) => {
+          const rss = new Rss(ctx, rssConfig)
+          rss.init()
+        })
+      }
+    },
   }
-}
+})

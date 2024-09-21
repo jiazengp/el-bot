@@ -1,17 +1,13 @@
-import type commander from 'commander'
-import { spawn } from 'node:child_process'
-import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import { Logger } from '@yunyoujun/logger'
-import { utils } from 'el-bot'
+import { createLogger, utils } from 'el-bot'
 import shell from 'shelljs'
 
 // 实例目录下的 package.json
 // eslint-disable-next-line ts/no-require-imports
 const pkg = require(getAbsolutePath('./package.json'))
 
-const logger = new Logger({ prefix: '[cli(start)]' })
+const logger = createLogger().child({ label: '🚀' })
 
 /**
  * 获取当前目录下的绝对路径
@@ -21,32 +17,21 @@ function getAbsolutePath(file: string) {
   return resolve(process.cwd(), file)
 }
 
-export default async function (cli: commander.Command) {
+/**
+ * @deprecated
+ * TODO: refactor for napcat
+ */
+export default async function (cli: any) {
   /**
    * 启动机器人
    */
   function startBot() {
-    const execFile = pkg.main || 'index.js' || 'index.ts' || 'index.mjs'
-    const file = getAbsolutePath(execFile)
-
-    if (fs.existsSync(file)) {
-      if (file.includes('.ts'))
-        spawn('ts-node', [file], { stdio: 'inherit' })
-      else
-        spawn('node', [file], { stdio: 'inherit' })
-
-      return true
-    }
-    else {
-      logger.error(
-        '不存在可执行文件，请检查 package.json 中 main 入口文件是否存在，或参考文档新建 bot/index.js 机器人实例。',
-      )
-      return false
-    }
+    // el-bot
   }
 
   /**
    * 启动 MCL
+   * @deprecated mirai
    */
   function startMcl(folder?: string) {
     // 先进入目录
@@ -54,7 +39,7 @@ export default async function (cli: commander.Command) {
       shell.cd(folder || (pkg.mcl ? pkg.mcl.folder : 'mcl'))
     }
     catch (err) {
-      utils.handleError(err, logger)
+      utils.handleError(err)
       logger.error('mcl 目录不存在')
     }
 
@@ -67,7 +52,7 @@ export default async function (cli: commander.Command) {
     .command('start [project]')
     .description('启动 el-bot')
     .option('-f --folder', 'mirai/mcl 所在目录')
-    .action((project, options) => {
+    .action((project: string, options: { folder: string | undefined }) => {
       if (!project || project === 'bot')
         startBot()
       else if (project === 'mcl')
