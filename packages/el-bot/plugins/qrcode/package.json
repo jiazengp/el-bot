@@ -1,0 +1,17 @@
+{
+  "name": "@el-bot/plugin-qrcode",
+  "version": "0.0.3",
+  "private": true,
+  "description": "二维码生成器",
+  "author": {
+    "name": "YunYouJun",
+    "url": "https://www.yunyoujun.cn",
+    "email": "me@yunyoujun.cn"
+  },
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js"
+    }
+  }
+}

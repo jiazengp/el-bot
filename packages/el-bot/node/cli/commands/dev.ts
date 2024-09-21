@@ -1,6 +1,6 @@
 import consola from 'consola'
 import { Argv } from 'yargs'
-import { createBot } from '../../../src'
+import { createBot } from '../../../core'
 import { commonOptions } from '../options'
 
 /**
@@ -21,15 +21,21 @@ export function registerDevCommand(cli: Argv) {
         .strict()
         .help(),
     async (_argv) => {
-      // start
-      consola.info('start dev')
-
+      consola.start('Link Start ...')
+      consola.log('')
       const bot = createBot({
         napcat: {
           protocol: 'ws',
           host: '127.0.0.1',
           port: 3001,
-          accessToken: 'yunyoujun',
+          accessToken: '',
+
+          // ↓ 自动重连(可选)
+          reconnection: {
+            enable: true,
+            attempts: 10,
+            delay: 5000,
+          },
         },
       })
       bot.start()

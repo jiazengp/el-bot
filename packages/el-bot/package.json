@@ -77,8 +77,9 @@
     "koa-bodyparser": "^4.4.1",
     "mirai-ts": "^2.4.8",
     "mongoose": "^8.6.3",
-    "node-napcat-ts": "^0.2.19",
+    "node-napcat-ts": "^0.2.21",
     "node-schedule": "^2.1.1",
+    "picocolors": "^1.1.0",
     "progress": "^2.0.3",
     "qq-guild-bot": "^2.9.5",
     "qrcode": "^1.5.0",
@@ -90,6 +91,7 @@
   },
   "devDependencies": {
     "@types/download": "^8.0.5",
+    "@types/fs-extra": "^11.0.4",
     "@types/html-to-text": "^9.0.4",
     "@types/js-yaml": "^4.0.9",
     "@types/koa": "^2.15.0",

@@ -1,0 +1,17 @@
+{
+  "name": "@el-bot/plugin-limit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "限制消息频率",
+  "author": {
+    "name": "YunYouJun",
+    "url": "https://www.yunyoujun.cn",
+    "email": "me@yunyoujun.cn"
+  },
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js"
+    }
+  }
+}
