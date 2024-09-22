@@ -1,8 +1,8 @@
 import type { BotConfig, BotUserConfig } from './bot'
 import type { ElUserConfig } from './el'
-import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import fs from 'fs-extra'
 import { createLogger } from '../bot/logger/winston'
 
 export * from './bot'

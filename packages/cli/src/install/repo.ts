@@ -1,6 +1,6 @@
-import fs from 'node:fs'
 import axios from 'axios'
 import download from 'download'
+import fs from 'fs-extra'
 import { createLogger } from 'packages/el-bot'
 import ProgressBar from 'progress'
 

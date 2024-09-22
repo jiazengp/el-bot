@@ -4,10 +4,10 @@
 /* eslint-env node */
 
 import { exec } from 'node:child_process'
-import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 import { prompt } from 'enquirer'
+import fs from 'fs-extra'
 import c from 'picocolors'
 
 const argv = process.argv.slice(2)

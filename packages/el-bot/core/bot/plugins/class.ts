@@ -107,7 +107,7 @@ export class Plugins {
           }
 
           // load plugin package.json
-          const packagePath = path.resolve(__dirname, pluginPath, `package.json`)
+          const packagePath = path.resolve(import.meta.dirname, pluginPath, `package.json`)
           if (await fs.exists(packagePath)) {
             pkg = await fs.readJson(packagePath)
           }

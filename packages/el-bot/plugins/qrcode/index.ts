@@ -1,7 +1,5 @@
 import type { Bot } from '../../core'
 import type { QRCodeOptions } from './options'
-import fs from 'node:fs'
-import { resolve } from 'node:path'
 import QRCode from 'qrcode'
 import qrcodeOptions from './options'
 
@@ -17,16 +15,17 @@ export async function generateQR(text: string, folder: string) {
   return filename
 }
 
-export default function (ctx: Bot, options: QRCodeOptions = qrcodeOptions) {
+export default function (ctx: Bot, _options: QRCodeOptions = qrcodeOptions) {
   // const { cli } = ctx
-  const name = 'qrcode'
-  const folder = resolve(ctx.el.path!.image, name)
+  // const name = 'qrcode'
+  // TODO
+  // const folder = resolve('', name)
 
-  if (!fs.existsSync(folder))
-    fs.mkdirSync(folder, { recursive: true })
+  // if (!fs.existsSync(folder))
+  //   fs.mkdirSync(folder, { recursive: true })
 
-  if (options.autoClearCache)
-    fs.rmSync(folder, { recursive: true })
+  // if (options.autoClearCache)
+  //   fs.rmSync(folder, { recursive: true })
 
   // cli
   //   .command('qrcode <text...>')

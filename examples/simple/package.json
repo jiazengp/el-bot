@@ -7,7 +7,7 @@
     "dev": "el-bot",
     "dev:w": "vite-node -w ../../packages/el-bot/bin/el-bot.ts",
     "build": "tsup",
-    "start": "tsx src/index.ts",
+    "start": "vite-node src/index.ts",
     "start:prod": "nodemon dist/index.js"
   },
   "devDependencies": {

@@ -1,8 +1,8 @@
 import type { CustomFields } from 'rss-parser'
-import fs from 'node:fs'
 import consola from 'consola'
 import dayjs from 'dayjs'
 import { type Bot, defineBotPlugin } from 'el-bot'
+import fs from 'fs-extra'
 import { htmlToText } from 'html-to-text'
 
 import schedule from 'node-schedule'

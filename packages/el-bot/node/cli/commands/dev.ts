@@ -1,9 +1,9 @@
 import { exec } from 'node:child_process'
-import path from 'node:path'
 import consola from 'consola'
 import { Argv } from 'yargs'
-import { Bot, createBot, ElUserConfig } from '../../../core'
+import { Bot, createBot } from '../../../core'
 import { commonOptions } from '../options'
+
 import { bindShortcut } from '../utils'
 
 let bot: Bot
@@ -29,11 +29,8 @@ export function registerDevCommand(cli: Argv) {
       consola.start('Link Start ...')
       consola.log('')
 
-      // resolve el-bot.config.ts
-      const elConfigFile = path.resolve(root, 'el-bot.config.ts')
-      const config = (await import(elConfigFile)).default as ElUserConfig
-
-      bot = createBot(config)
+      // set root dir
+      bot = await createBot(root)
       await bot.start()
 
       const SHORTCUTS = [

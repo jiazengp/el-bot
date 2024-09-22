@@ -1,15 +1,14 @@
 import type { WebhookConfig } from '../bot/webhook'
 import type { BotConfig, BotUserConfig } from './bot'
-import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
+import fs from 'fs-extra'
 // import type { MiraiApiHttpSetting } from 'mirai-ts'
 import { NCWebsocketOptions } from 'node-napcat-ts'
 import { Target } from '../../types'
 
 import { mergeConfig } from '../utils/config'
 
-const assetsFolder = 'data/net.mamoe.mirai-api-http'
 export interface dbConfig {
   /**
    * 是否启用
@@ -47,15 +46,6 @@ export interface ElConfig<T = BotConfig> {
    */
   debug?: boolean
   /**
-   * MiraiApiHttp setting.yml 路径
-   * 或传入 MiraiApiHttpConfig 对象配置
-   */
-  // setting: MiraiApiHttpSetting | string
-  /**
-   * mirai info
-   */
-  mirai: { folder: string }
-  /**
    * mongodb 数据库默认配置
    */
   db: dbConfig
@@ -87,19 +77,6 @@ export interface ElConfig<T = BotConfig> {
    * 根目录
    */
   base: string
-  /**
-   * mirai-api-http 文件路径
-   */
-  path: {
-    /**
-     * 图片路径
-     */
-    image: string
-    /**
-     * 语音路径
-     */
-    voice: string
-  }
 }
 
 export type ElUserConfig = Partial<ElConfig<BotUserConfig>>
@@ -108,13 +85,7 @@ export type ElUserConfig = Partial<ElConfig<BotUserConfig>>
  * 解析 El Config
  */
 export function resolveElConfig(userConfig: ElUserConfig) {
-  const cwd = process.cwd()
-  const miraiConfig = {
-    folder: 'mcl',
-  }
   const defaultElConfig: ElConfig = {
-    // setting: '../mcl/config/net.mamoe.mirai-api-http/setting.yml',
-    mirai: miraiConfig,
     db: {
       enable: false,
     },
@@ -154,18 +125,11 @@ export function resolveElConfig(userConfig: ElUserConfig) {
       enable: false,
     },
     base: process.cwd(),
-    path: {
-      image: resolve(cwd, miraiConfig.folder, `${assetsFolder}/images`),
-      voice: resolve(cwd, miraiConfig.folder, `${assetsFolder}/voices`),
-    },
   }
 
   // 合并
   const config = mergeConfig(defaultElConfig, userConfig) as ElConfig
-
   config.pkg = pkg
-  config.path.image = resolve(config.base, config.mirai.folder, `${assetsFolder}/images`)
-  config.path.image = resolve(config.base, config.mirai.folder, `${assetsFolder}/voices`)
 
   return config
 }

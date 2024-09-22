@@ -1,9 +1,9 @@
 import type mongoose from 'mongoose'
 import type { Server } from 'node:net'
 import type { ElConfig, ElUserConfig } from '../config/el'
-import fs from 'node:fs'
-import { resolve } from 'node:path'
+import path, { resolve } from 'node:path'
 import process from 'node:process'
+import fs from 'fs-extra'
 import { GroupMessage, NCWebsocket, PrivateMessage, Send, Structs } from 'node-napcat-ts'
 import colors from 'picocolors'
 import { resolveElConfig } from '../config/el'
@@ -35,10 +35,30 @@ export * from './plugins'
 
 /**
  * 创建机器人
- * @param el
+ * @param el 用户配置 | el-bot.config.ts 所在目录
  */
-export function createBot(el: ElUserConfig) {
-  return new Bot(el)
+export async function createBot(el: ElUserConfig | string = process.cwd()) {
+  let elConfig: ElUserConfig
+
+  // resolve el-bot.config.ts
+  if (typeof el === 'string') {
+    const rootDir = el
+    const elConfigFile = path.resolve(rootDir, 'el-bot.config.ts')
+    if (!(await fs.exists(elConfigFile))) {
+      consola.error('el-bot.config.ts not found')
+      consola.error('Please create `el-bot.config.ts` in the root directory.')
+    }
+    const config = (await import(elConfigFile)).default as ElUserConfig
+    elConfig = config
+  }
+  else if (typeof el === 'object') {
+    elConfig = el
+  }
+  else {
+    throw new TypeError('`createBot` option must be a string or object')
+  }
+
+  return new Bot(elConfig)
 }
 
 export class Bot {
@@ -240,10 +260,16 @@ export class Bot {
       }
     }
 
+    // 如何解决持久运行
     // 意外退出
     process.on('SIGINT', () => {
-      this.stop()
-      process.exit(0)
+      /**
+       * 如果程序在前台运行（即，process.stdin.isTTY 为 true），那么它会在收到 SIGINT 信号时退出。如果程序在后台运行（即，process.stdin.isTTY 为 false），那么它会忽略 SIGINT 信号。
+       */
+      if (process.stdin.isTTY) {
+        this.stop()
+        process.exit(0)
+      }
     })
   }
 

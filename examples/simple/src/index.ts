@@ -1,12 +1,8 @@
-// import process from 'node:process'
-// import { createBot } from 'el-bot'
+import { createBot } from 'el-bot'
 
-// import 'dotenv/config'
+export async function main() {
+  const bot = await createBot()
+  await bot.start()
+}
 
-// export async function main() {
-//   const bot = createBot({
-//     napcat: {},
-//   })
-// }
-
-// main()
+main()

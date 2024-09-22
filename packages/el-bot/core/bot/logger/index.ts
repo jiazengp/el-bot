@@ -1,6 +1,7 @@
 // import colors from 'picocolors'
 import { createLogger } from './winston'
 
+export * from './consola'
 export * from './winston'
 
 const defaultLogger = createLogger()

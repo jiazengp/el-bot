@@ -1,13 +1,11 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
+    "emitDecoratorMetadata": false,
+    "rootDir": ".",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "paths": {
-      "el-bot": ["../../packages/el-bot/src/index.ts"]
-    },
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
