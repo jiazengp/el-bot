@@ -8,32 +8,47 @@
 [![GitHub](https://img.shields.io/github/license/YunYouJun/el-bot)](https://github.com/YunYouJun/el-bot/blob/master/LICENSE)
 ![node-current](https://img.shields.io/node/v/el-bot)
 
-一个基于 [mirai-ts](https://github.com/YunYouJun/mirai-ts)，使用 TS/JS 编写，快速、可配置、可自定义插件的 QQ 机器人框架。
+一个基于 Bun，使用 TS 编写，快速、可配置、可自定义插件的 QQ 机器人框架。
 
-由于 mirai 频繁的内存泄漏，我决定将其迁移至 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)。
-**正在重构开发中，因此它的很多代码可能已经失效，并将被移除。**
-
-在此之后，它的目标更倾向于成为一个方便快捷启动与配置的工具/模版。
-
-> el-bot 是一个非盈利的开源项目，仅供交流学习使用。请勿用于商业或非法用途，因使用而与腾讯公司产生的一切纠纷均与原作者无关。
+> el-bot 是一个非盈利的开源项目，仅供交流学习使用。请勿用于商业或非法用途。
+> 本项目为个人学习项目，与腾讯公司并无关联。
 
 - 使用文档：<https://docs.bot.elpsy.cn>
 - API 文档：<https://www.yunyoujun.cn/el-bot/>
 
-> El-Bot will be ESM only!
+## ⚠️ BREAKING CHANGES (REFACTORING)
+
+**正在重构开发中，因此它的很多代码可能已经失效，并将被移除。**
+
+- QQ
+  - 迁移 [mirai](https://github.com/mamoe/mirai) 至 [NapCatQQ](https://github.com/NapNeko/NapCatQQ)
+  - 迁移 [mirai-ts](https://github.com/YunYouJun/mirai-ts) 至 [node-napcat-ts](https://github.com/huankong-team/node-napcat-ts)
+- 使用 TypeScript 作为一等公民，使用 Bun 作为默认运行时，不再支持 JS（如需要，可自行编译）
+- 使用 [bun](https://bun.sh/) 替代 pnpm
 
 ## 开始
 
-mirai 1.0 版本以上推荐使用官方启动器 [mirai-console-loader](https://github.com/iTXTech/mirai-console-loader) 自行启动 [mirai](https://github.com/mamoe/mirai) 与 [mirai-api-http](https://github.com/mamoe/mirai-api-http) 插件。
+参考以下文档，启动 QQ 协议端。
 
-（因为种种原因，本项目不接受任何关于如何使用 mirai 的问题，你应当具有自行启动 mirai 的能力，但欢迎 el-bot 项目本身的反馈。）
+- [NapCatQQ](https://github.com/NapNeko/NapCatQQ)
 
-> 你也可以直接参考 [el-bot-template](https://github.com/ElpsyCN/el-bot-template)。
+### 安装 Bun
+
+```bash
+# Windows
+powershell -c "irm bun.sh/install.ps1 | iex"
+# Linux/macOS
+curl -fsSL https://bun.sh/install | bash
+```
 
 ```sh
 npm install el-bot
 # pnpm i el-bot
 ```
+
+### 初始化文件
+
+> 你也可以直接参考 [el-bot-template](https://github.com/ElpsyCN/el-bot-template)。
 
 ```ts
 import { Bot } from 'el-bot'
@@ -55,7 +70,17 @@ So easy! Right?
 
 详细使用说明请参见 [el-bot 文档](https://docs.bot.elpsy.cn/)。
 
-## 升级
+### 编写插件
+
+- [node-napcat-ts](https://github.com/huankong-team/node-napcat-ts)
+
+### 启动
+
+```bash
+npx el-bot
+```
+
+### 升级
 
 ```sh
 npm install el-bot@latest
@@ -68,8 +93,6 @@ npm install el-bot@latest
 有问题和建议欢迎提 Issue，谢谢！（在此之前，请确保您已仔细阅读文档。）
 
 ## 说明
-
-请勿将其用于商业或非法用途。
 
 ### [与 koishi 的区别](https://docs.bot.elpsy.cn/about.html#与-koishi-的区别)
 
@@ -84,6 +107,8 @@ npm install el-bot@latest
 
 ## Thanks
 
+- [NapCatQQ](https://github.com/NapNeko/NapCatQQ)
+- [node-napcat-ts](https://github.com/huankong-team/node-napcat-ts)
 - [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
 - [mirai](https://github.com/mamoe/mirai)
 - [mirai-console](https://github.com/mamoe/mirai-console)
@@ -93,35 +118,26 @@ npm install el-bot@latest
 
 ## 启动
 
-```sh
-git clone https://github.com/YunYouJun/el-bot
-cd el-bot
-pnpm i
-```
-
 配置测试机器人（看情况配置吧）
 
 ```sh
 cp bot/.env.example .env
 ```
 
-启动 cqhttp
-
-```bash
-pnpm cqhttp
-```
-
-### 运行 Demo
-
-```bash
-pnpm demo
-```
-
-## 开发
+## 参与开发
 
 开发测试（运行起来吧）
 
 ```sh
+git clone https://github.com/YunYouJun/el-bot
+cd el-bot
+pnpm i
+```
+
+```sh
+# 启动 demo
+pnpm demo
+
 npm run dev:bot
 ```
 
@@ -131,13 +147,6 @@ npm run dev:bot
 npm run dev:lib
 ```
 
-### 构建
+## CHANGELOG
 
-```sh
-# 构建 el-bot
-npm run build
-```
-
-## V1
-
-Fully ESM & TS, based on `vite-node`.
+See [CHANGELOG.md](./CHANGELOG.md).

@@ -1,7 +1,8 @@
 {
-  "name": "@el-bot/demo-simple",
+  "name": "@el-bot/example-simple",
   "type": "module",
   "version": "0.1.0",
+  "private": true,
   "description": "A simple demo for el-bot.",
   "scripts": {
     "dev": "el-bot",

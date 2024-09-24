@@ -29,6 +29,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["packages/*/src", "packages/*/src/**/*/package.json"],
+  "include": ["**/*.ts"],
   "exclude": ["dist", "node_modules", "**/*.spec.ts"]
 }

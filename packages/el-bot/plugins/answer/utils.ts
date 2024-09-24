@@ -54,3 +54,27 @@ export function displayAnswerList(options: AnswerOptions) {
   })
   return content
 }
+
+/**
+ * 根据 API 返回的内容渲染字符串
+ * @param api
+ * @param content
+ */
+export async function renderStringByApi(
+  api: string,
+  content: ReplyContent,
+) {
+  const { data } = await axios.get(api)
+  if (typeof content === 'string') {
+    return renderString(content, data, 'data')
+  }
+  else {
+    if (!content)
+      return
+    (content as any).forEach((msg: MessageType.SingleMessage) => {
+      if (msg.type === 'Plain')
+        msg.text = renderString(msg.text, data, 'data')
+    })
+    return content
+  }
+}

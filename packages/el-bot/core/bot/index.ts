@@ -28,6 +28,7 @@ import Webhook from './webhook'
 import type { Plugin, PluginInstallFunction } from './plugins/class'
 import consola from 'consola'
 import yargs from 'yargs'
+import { hooks } from '../../composition-api'
 import { logger } from './logger'
 
 export * from './logger'
@@ -205,7 +206,13 @@ export class Bot {
     if (this.el.db?.enable)
       await connectDb(this, this.el.db)
 
-    await this.napcat.connect()
+    try {
+      await this.napcat.connect()
+    }
+    catch (err: any) {
+      consola.error('NapCat by SDK 连接失败')
+      handleError(err)
+    }
     const data = await this.napcat.get_version_info()
     consola.success(`${data.app_name} ${colors.yellow(data.app_version)} ${colors.cyan(data.protocol_version)} connected!`)
 
@@ -236,7 +243,7 @@ export class Bot {
     consola.start('加载插件...')
     consola.log('')
     await this.plugins.load('default')
-    await this.plugins.load('official')
+    // await this.plugins.load('official')
     await this.plugins.load('community')
 
     // 自动加载自定义插件
@@ -259,6 +266,14 @@ export class Bot {
         handleError(err)
       }
     }
+
+    // reset
+    hooks.removeAllHooks()
+    // onMessage
+    this.napcat.on('message', async (msg) => {
+      consola.info(msg)
+      await hooks.callHook('onMessage', msg)
+    })
 
     // 如何解决持久运行
     // 意外退出

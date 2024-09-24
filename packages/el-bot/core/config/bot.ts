@@ -1,6 +1,8 @@
 // import type { AnswerOptions } from '../plugins/answer'
 // import type { ForwardOptions } from '../plugins/forward'
 
+import { BotPlugin } from '../bot'
+
 export interface BotConfig {
   /**
    * 机器人名
@@ -20,12 +22,8 @@ export interface BotConfig {
   /**
    * 插件配置
    */
-  plugins: {
-    default?: string[]
-    official?: string[]
-    community?: string[]
-    custom?: string[]
-  }
+  plugins: BotPlugin[]
+
   /**
    * 主人（超级管理员）
    */
@@ -39,10 +37,6 @@ export interface BotConfig {
    * 开发测试群
    */
   devGroup: number
-
-  // 默认插件
-  // answer?: AnswerOptions
-  // forward?: ForwardOptions
 
   /**
    * 其他插件配置

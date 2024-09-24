@@ -1,6 +1,0 @@
-packages:
-  - examples/*
-  - packages/*
-  - plugins/*
-  - demo
-  - docs
