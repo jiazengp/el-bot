@@ -1,8 +1,21 @@
-import { defineConfig } from 'el-bot'
+import { answerPlugin, defineConfig } from 'el-bot'
+
+const answer = answerPlugin({
+  list: [
+    {
+      listen: 'master',
+      receivedText: ['在吗'],
+      reply: 'Hello, master!',
+      else: '爪巴',
+    },
+  ],
+})
 
 export default defineConfig({
   bot: {
-
+    plugins: [
+      answer,
+    ],
   },
 
   napcat: {

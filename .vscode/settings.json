@@ -7,7 +7,8 @@
     "koishijs",
     "mamoe",
     "mirai",
-    "Onebot"
+    "Onebot",
+    "Napcat"
   ],
   // Disable the default formatter, use eslint instead
   "prettier.enable": false,

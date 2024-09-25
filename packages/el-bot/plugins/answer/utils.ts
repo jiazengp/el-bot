@@ -1,18 +1,21 @@
-import type { check, MessageType } from 'mirai-ts'
+import type { MessageType } from 'mirai-ts'
 import type nodeSchdule from 'node-schedule'
 import type * as Config from '../../types/config'
+import axios from 'axios'
+import { Send } from 'node-napcat-ts'
+import { renderString } from '../../core/utils'
 
-export type ReplyContent = string | Partial<MessageType.SingleMessage>[]
+export type ReplyContent = string | Send[keyof Send][]
 
-interface BaseAnswerOptions extends check.Match {
+interface BaseAnswerOptions {
   /**
    * 监听
    */
-  listen?: string | Config.Listen
+  listen?: string | Config.ListenTarget
   /**
    * 不监听
    */
-  unlisten?: Config.Listen
+  unListen?: Config.ListenTarget
   /**
    * 定时任务
    */
@@ -25,6 +28,26 @@ interface BaseAnswerOptions extends check.Match {
    * API 地址，存在时，自动渲染字符串
    */
   api?: string
+
+  /**
+   * 是否命中 用于自定义判断
+   * @example
+   * ```ts
+   * hit: (msg) => msg.raw_message === 'ping'
+   * ```
+   */
+  hit?: (msg: string) => boolean
+
+  /**
+   * 接收到的文本 完全匹配 时回复
+   * @example
+   * ```ts
+   * {
+   *   receivedText: 'ping',
+   *   reply: 'pong'
+   * }
+   */
+  receivedText?: string[]
   reply: ReplyContent
   /**
    * 只有被 @ 时回复
@@ -41,14 +64,34 @@ interface BaseAnswerOptions extends check.Match {
   help?: string
 }
 
-export type AnswerOptions = BaseAnswerOptions[]
+/**
+ * @internal
+ * @description Answer 插件配置
+ * @example
+ * ```ts
+ * // el-bot.config.ts
+ * import { answerPlugin, defineConfig } from 'el-bot'
+ * export default defineConfig({
+ *   bot: {
+ *     plugins: [
+ *       answerPlugin({
+ *         list: []
+ *       })
+ *     ]
+ *   },
+ * })
+ * ```
+ */
+export interface AnswerOptions {
+  list: BaseAnswerOptions[]
+}
 
 /**
  * 输出回答列表
  */
 export function displayAnswerList(options: AnswerOptions) {
   let content = '回答列表：'
-  options.forEach((option) => {
+  options.list.forEach((option) => {
     if (option.help)
       content += `\n- ${option.help}`
   })

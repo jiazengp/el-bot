@@ -18,8 +18,8 @@ export async function getAllPlugins(dir: string): Promise<string[]> {
 export interface PluginOptions {}
 
 /**
- * 定义机器人插件
  * @example
+ * 定义机器人插件
  * ```ts
  * import { defineBotPlugin } from 'el-bot'
  *
@@ -29,7 +29,23 @@ export interface PluginOptions {}
  *   },
  *   setup: (ctx) => {},
  * })
+ * ```
+ *
+ * @example
+ * 定义带配置的插件
+ * ```ts
+ * import { defineBotPlugin } from 'el-bot'
+ *
+ * export default defineBotPlugin<CustomPluginOptions>((options) => ({
+ *   pkg: {
+ *     name: 'ping',
+ *   },
+ *   setup: (ctx) => {
+ *     console.log(options)
+ *   }
+ * })
+ * ```
  */
 export function defineBotPlugin<T = PluginOptions>(botPlugin: BotPlugin | ((options: T) => BotPlugin)) {
-  return botPlugin
+  return botPlugin as T extends PluginOptions ? (options: T) => BotPlugin : BotPlugin
 }

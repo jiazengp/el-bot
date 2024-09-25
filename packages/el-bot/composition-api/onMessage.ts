@@ -1,6 +1,10 @@
 // import {  } from "node-napcat-ts";
 
+import { GroupMessage, PrivateMessage } from 'node-napcat-ts'
 import { currentInstance } from './litecycle'
+
+export type NapcatMessage = PrivateMessage | GroupMessage
+export type CommonMessage = NapcatMessage
 
 /**
  * listen to all message
@@ -9,7 +13,7 @@ import { currentInstance } from './litecycle'
  * @param handler
  */
 export function onMessage(
-  handler: (msg: any) => void | Promise<void>,
+  handler: (msg: NapcatMessage) => void | Promise<void>,
 ) {
   currentInstance?.hooks.hook('onMessage', handler)
 }
@@ -19,7 +23,7 @@ export function onMessage(
  * @param handler
  */
 export function onNapcatMessage(
-  handler: (msg: any) => void | Promise<void>,
+  handler: (msg: NapcatMessage) => void | Promise<void>,
 ) {
   currentInstance?.hooks.hook('onNapcatMessage', handler)
 }

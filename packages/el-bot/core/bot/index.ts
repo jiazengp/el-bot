@@ -179,8 +179,13 @@ export class Bot {
    * 机器人当前消息 快捷回复
    */
 
-  reply(rawMsg: PrivateMessage | GroupMessage, msg: Send[keyof Send][], quote = false) {
+  reply(rawMsg: PrivateMessage | GroupMessage, msg: Send[keyof Send][] | string, quote = false) {
     const napcat = this.napcat
+
+    // 文本消息
+    if (typeof msg === 'string') {
+      msg = [Structs.text(msg)]
+    }
 
     // 引用消息
     if (quote) {

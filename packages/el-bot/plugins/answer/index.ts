@@ -7,7 +7,7 @@ import { defineBotPlugin } from '../../core'
 
 export * from './utils'
 
-export default defineBotPlugin<AnswerOptions>((_options) => {
+export default defineBotPlugin<AnswerOptions>((options) => {
   return {
     // extendCli: (cli) => {
     //   cli
@@ -21,7 +21,7 @@ export default defineBotPlugin<AnswerOptions>((_options) => {
     //     })
     // },
 
-    setup(_ctx) {
+    setup(ctx) {
       // 设置定时
       // options.forEach((ans) => {
       //   if (ans.cron) {
@@ -37,37 +37,42 @@ export default defineBotPlugin<AnswerOptions>((_options) => {
       // })
 
       // 应答
-      onMessage(async (_msg) => {
+      onMessage(async (msg) => {
         // use async in some
         // https://advancedweb.hu/how-to-use-async-functions-with-array-some-and-every-in-javascript/
-        // for await (const ans of options) {
+        for await (const ans of options.list) {
         // const replyContent = null
 
-        // if (ans.at) {
-        //   if (!(msg.type === 'GroupMessage' && msg.isAt()))
-        //     return
-        // }
+          // if (ans.at) {
+          //   if (!(msg.type === 'GroupMessage' && msg.isAt()))
+          //     return
+          // }
 
-        // if (msg.plain && check.match(msg.plain, ans)) {
-        // // 默认监听所有
-        //   if (ctx.status.getListenStatusByConfig(msg.sender, ans)) {
-        //     replyContent = ans.api
-        //       ? await renderStringByApi(ans.api, ans.reply)
-        //       : ans.reply
-        //   }
-        //   else if (ans.else) {
-        //   // 后续可以考虑用监听白名单、黑名单优化
-        //     replyContent = ans.api
-        //       ? await renderStringByApi(ans.api, ans.else)
-        //       : ans.else
-        //   }
+          if (ans.receivedText?.includes(msg.raw_message)) {
+            await ctx.reply(msg, ans.reply)
+            break
+          }
+
+          // if (msg.plain && check.match(msg.plain, ans)) {
+          // // 默认监听所有
+          //   if (ctx.status.getListenStatusByConfig(msg.sender, ans)) {
+          //     replyContent = ans.api
+          //       ? await renderStringByApi(ans.api, ans.reply)
+          //       : ans.reply
+          //   }
+          //   else if (ans.else) {
+          //   // 后续可以考虑用监听白名单、黑名单优化
+          //     replyContent = ans.api
+          //       ? await renderStringByApi(ans.api, ans.else)
+          //       : ans.else
+          //   }
 
         //   if (replyContent) {
         //     await msg.reply(replyContent, ans.quote)
         //     // 有一个满足即跳出
         //     break
         //   }
-        // }
+        }
       })
     },
   }

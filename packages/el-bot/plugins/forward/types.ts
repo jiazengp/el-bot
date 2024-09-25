@@ -1,14 +1,9 @@
-import { Target } from '../../types'
+import { ListenTarget, Target } from '../../types'
 
 export type BaseListenType = 'all' | 'master' | 'admin' | 'friend' | 'group'
 
-/**
- * 监听格式
- */
-export type Listen = Target | (BaseListenType | number)[]
-
 export interface ForwardItem {
-  listen: Listen
+  listen: ListenTarget
   target: Target
 }
 
