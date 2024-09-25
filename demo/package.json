@@ -7,6 +7,7 @@
     "dev": "bun --hot bot/index.ts",
     "dev:v": "vite-node -w ../packages/el-bot/bin/el-bot.ts",
     "build": "tsup",
+    "pm2": "pm2 start pm2.config.cjs",
     "start": "vite-node bot/index.ts",
     "start:cli": "el-bot",
     "start:prod": "nodemon dist/index.js",

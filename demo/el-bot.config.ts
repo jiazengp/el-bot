@@ -6,6 +6,8 @@ export default defineConfig({
   },
 
   napcat: {
+    debug: false,
+
     protocol: 'ws',
     host: '127.0.0.1',
     port: 3001,

@@ -1,13 +1,25 @@
 // import {  } from "node-napcat-ts";
 
-import { createHooks } from 'hookable'
+import { currentInstance } from './litecycle'
 
-export const hooks = createHooks<{
-  onMessage: (msg: any) => void | Promise<void>
-}>()
-
+/**
+ * listen to all message
+ * - napcat
+ * - TODO
+ * @param handler
+ */
 export function onMessage(
   handler: (msg: any) => void | Promise<void>,
 ) {
-  hooks.hook('onMessage', handler)
+  currentInstance?.hooks.hook('onMessage', handler)
+}
+
+/**
+ * only listen to napcat message
+ * @param handler
+ */
+export function onNapcatMessage(
+  handler: (msg: any) => void | Promise<void>,
+) {
+  currentInstance?.hooks.hook('onNapcatMessage', handler)
 }

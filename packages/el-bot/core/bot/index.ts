@@ -4,12 +4,13 @@ import type { ElConfig, ElUserConfig } from '../config/el'
 import path, { resolve } from 'node:path'
 import process from 'node:process'
 import fs from 'fs-extra'
+import { createHooks } from 'hookable'
 import { GroupMessage, NCWebsocket, PrivateMessage, Send, Structs } from 'node-napcat-ts'
 import colors from 'picocolors'
+
 import { resolveElConfig } from '../config/el'
 
 import { connectDb } from '../db'
-
 import { isFunction } from '../shared'
 import { handleError } from '../utils/error'
 import { statement } from '../utils/misc'
@@ -18,6 +19,7 @@ import { Plugins } from './plugins'
 import { Sender } from './sender'
 import { Status } from './status'
 import { User } from './user'
+
 import Webhook from './webhook'
 
 // shared
@@ -28,7 +30,6 @@ import Webhook from './webhook'
 import type { Plugin, PluginInstallFunction } from './plugins/class'
 import consola from 'consola'
 import yargs from 'yargs'
-import { hooks } from '../../composition-api'
 import { logger } from './logger'
 
 export * from './logger'
@@ -105,6 +106,14 @@ export class Bot {
    * 已安装的插件
    */
   installedPlugins = new Set()
+  /**
+   * for composition-api
+   */
+  hooks = createHooks<{
+    onMessage: (msg: any) => void | Promise<void>
+    onNapcatMessage: (msg: any) => void | Promise<void>
+  }>()
+
   /**
    * 面向开发者的指令系统
    */
@@ -225,18 +234,8 @@ export class Bot {
       handleError(err)
     }
 
-    // // mah about
-    // try {
-    //   const { data } = await this.mirai.api.about()
-    //   this.logger.info(`[mah] version: ${data.version}`)
-    // }
-    // catch (e) {
-    //   console.error(e)
-    //   this.logger.error(
-    //     '未检测到 mirai-api-http 版本，请检查是否已与 mah 建立链接！',
-    //   )
-    //   return
-    // }
+    // reset
+    this.hooks.removeAllHooks()
 
     // 加载插件
     consola.log('')
@@ -267,12 +266,10 @@ export class Bot {
       }
     }
 
-    // reset
-    hooks.removeAllHooks()
     // onMessage
     this.napcat.on('message', async (msg) => {
-      consola.info(msg)
-      await hooks.callHook('onMessage', msg)
+      await this.hooks.callHook('onMessage', msg)
+      await this.hooks.callHook('onNapcatMessage', msg)
     })
 
     // 如何解决持久运行

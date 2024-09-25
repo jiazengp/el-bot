@@ -4,8 +4,9 @@ import consola from 'consola'
 import fs from 'fs-extra'
 import colors from 'picocolors'
 import { type Bot, BotPlugin, logger } from '..'
-import { isFunction } from '../../shared'
+import { setCurrentInstance } from '../../../composition-api/litecycle'
 
+import { isFunction } from '../../shared'
 import { merge } from '../../utils/config'
 import { handleError } from '../../utils/error'
 import { pluginLogger } from '../logger'
@@ -153,11 +154,13 @@ export class Plugins {
       pluginLogger.warning('未配置自定义插件目录')
     }
     else {
-      consola.log('')
       const absolutePluginDir = path.resolve(process.cwd(), pluginDir)
       consola.info(`自定义插件目录: ${colors.cyan(absolutePluginDir)}`)
+      consola.log('')
 
       const customPlugins = await getAllPlugins(absolutePluginDir)
+
+      setCurrentInstance(this.ctx)
       for (const customPluginName of customPlugins) {
         const pluginPath = path.resolve(absolutePluginDir, `${customPluginName}.ts`)
         const importedCustomPlugin = (await import(pluginPath)).default
