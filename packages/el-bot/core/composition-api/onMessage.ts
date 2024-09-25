@@ -9,13 +9,16 @@ export type CommonMessage = NapcatMessage
 /**
  * listen to all message
  * - napcat
- * - TODO
+ * - TODO: other platform
  * @param handler
  */
 export function onMessage(
   handler: (msg: NapcatMessage) => void | Promise<void>,
 ) {
-  currentInstance?.hooks.hook('onMessage', handler)
+  // consola.info('onMessage', handler)
+  currentInstance?.hooks.addHooks({
+    onMessage: handler,
+  })
 }
 
 /**
@@ -25,5 +28,7 @@ export function onMessage(
 export function onNapcatMessage(
   handler: (msg: NapcatMessage) => void | Promise<void>,
 ) {
-  currentInstance?.hooks.hook('onNapcatMessage', handler)
+  currentInstance?.hooks.addHooks({
+    onNapcatMessage: handler,
+  })
 }

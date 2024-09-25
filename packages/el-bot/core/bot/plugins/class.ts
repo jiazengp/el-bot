@@ -1,10 +1,8 @@
 import path from 'node:path'
 import process from 'node:process'
 import consola from 'consola'
-import fs from 'fs-extra'
 import colors from 'picocolors'
 import { type Bot, BotPlugin, logger } from '..'
-import { setCurrentInstance } from '../../../composition-api/litecycle'
 
 import { isFunction } from '../../shared'
 import { merge } from '../../utils/config'
@@ -83,67 +81,34 @@ export class Plugins {
   }
 
   /**
-   * 加载对应类型插件
-   * @param type 插件类型 default | custom
-   * import ts
+   * 加载配置中的插件
+   * plugins: []
    */
-  async load(type: PluginType) {
+  async loadConfig() {
     const botConfig = this.ctx.el.bot!
-    if (botConfig.plugins && botConfig.plugins[type]) {
-      for (const name of botConfig.plugins[type]) {
-        const pkgName = this.getPluginFullName(name, type)
-        // colorize
-        const cPluginType = colors.dim(type)
+    if (botConfig.plugins) {
+      consola.start(`加载配置插件 - 共 ${colors.green(botConfig.plugins.length)} 个...`)
+      consola.log('')
 
+      for (const plugin of botConfig.plugins) {
+        const pkgName = plugin.pkg?.name || '未知'
         try {
-          const pluginPath = type === 'default' ? `../../../plugins/${pkgName}` : pkgName
-          const suffix = 'ts'
-          const importedPath = await fs.exists(`${pluginPath}.${suffix}`) ? `${pluginPath}.${suffix}` : `${pluginPath}/index.${suffix}`
-          const { default: plugin } = await import(importedPath)
-
-          let pkg = {
-            name: pkgName,
-            version: '未知',
-            description: '未知',
-          }
-
-          // load plugin package.json
-          const packagePath = path.resolve(import.meta.dirname, pluginPath, `package.json`)
-          if (await fs.exists(packagePath)) {
-            pkg = await fs.readJson(packagePath)
-          }
-          else {
-            pluginLogger.warning(`${name} 插件没有相关描述信息`)
-          }
-
           if (plugin) {
-            if (pkg)
-              plugin.pkg = pkg
-
-            this[type].add({
-              name: name || pkgName,
-              version: plugin.version || pkg.version,
-              description: plugin.description || pkg.description,
-            })
-
-            const basename = path.basename(name)
-            this.add(basename, {
-              install: plugin,
-            })
-
+            await plugin.setup(this.ctx)
             pluginLogger
-              .child({ plugin: name })
-              .success(`${cPluginType} 加载成功`)
+              .child({ plugin: pkgName })
+              .success(`加载成功`)
           }
         }
         catch (err: any) {
           handleError(err as Error)
           pluginLogger
-            .child({ plugin: name })
-            .error(`${cPluginType} 加载失败`)
+            .child({ plugin: pkgName })
+            .error(`加载失败`)
         }
       }
     }
+    consola.log('')
   }
 
   /**
@@ -156,11 +121,10 @@ export class Plugins {
     else {
       const absolutePluginDir = path.resolve(process.cwd(), pluginDir)
       consola.info(`自定义插件目录: ${colors.cyan(absolutePluginDir)}`)
+      const customPlugins = await getAllPlugins(absolutePluginDir)
+      consola.start(`加载自定义插件 - 共 ${colors.green(customPlugins.length)} 个...`)
       consola.log('')
 
-      const customPlugins = await getAllPlugins(absolutePluginDir)
-
-      setCurrentInstance(this.ctx)
       for (const customPluginName of customPlugins) {
         const pluginPath = path.resolve(absolutePluginDir, `${customPluginName}.ts`)
         const importedCustomPlugin = (await import(pluginPath)).default

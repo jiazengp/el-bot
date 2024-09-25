@@ -30,6 +30,7 @@ import Webhook from './webhook'
 import type { Plugin, PluginInstallFunction } from './plugins/class'
 import consola from 'consola'
 import yargs from 'yargs'
+import { setCurrentInstance } from '../composition-api/litecycle'
 import { logger } from './logger'
 
 export * from './logger'
@@ -222,13 +223,13 @@ export class Bot {
 
     try {
       await this.napcat.connect()
+      const data = await this.napcat.get_version_info()
+      consola.success(`${data.app_name} ${colors.yellow(data.app_version)} ${colors.cyan(data.protocol_version)} connected!`)
     }
     catch (err: any) {
       consola.error('NapCat by SDK 连接失败')
       handleError(err)
     }
-    const data = await this.napcat.get_version_info()
-    consola.success(`${data.app_name} ${colors.yellow(data.app_version)} ${colors.cyan(data.protocol_version)} connected!`)
 
     // get login info
     try {
@@ -241,19 +242,15 @@ export class Bot {
 
     // reset
     this.hooks.removeAllHooks()
-
     // 加载插件
     consola.log('')
-    consola.start('加载插件...')
-    consola.log('')
-    await this.plugins.load('default')
-    // await this.plugins.load('official')
-    await this.plugins.load('community')
-
+    setCurrentInstance(this)
+    await this.plugins.loadConfig()
     // 自动加载自定义插件
     if (this.el.bot.autoloadPlugins) {
       await this.plugins.loadCustom(this.el.bot.pluginDir)
     }
+
     consola.log('')
     consola.success('插件加载完成')
     consola.log('')

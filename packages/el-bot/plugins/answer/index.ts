@@ -1,14 +1,16 @@
 import type { AnswerOptions } from './utils'
-import { onMessage } from '../../composition-api'
+import consola from 'consola'
 // import axios from 'axios'
 // import * as nodeSchdule from 'node-schedule'
-import { defineBotPlugin } from '../../core'
+import { defineBotPlugin, onNapcatMessage } from '../../core'
 // import { displayAnswerList, renderString } from './utils'
+import pkg from './package.json'
 
 export * from './utils'
 
 export default defineBotPlugin<AnswerOptions>((options) => {
   return {
+    pkg,
     // extendCli: (cli) => {
     //   cli
     //     .command('answer')
@@ -36,13 +38,13 @@ export default defineBotPlugin<AnswerOptions>((options) => {
       //   }
       // })
 
+      consola.info('answer setup')
       // 应答
-      onMessage(async (msg) => {
+      onNapcatMessage(async (msg) => {
         // use async in some
         // https://advancedweb.hu/how-to-use-async-functions-with-array-some-and-every-in-javascript/
         for await (const ans of options.list) {
-        // const replyContent = null
-
+          // const replyContent = null
           // if (ans.at) {
           //   if (!(msg.type === 'GroupMessage' && msg.isAt()))
           //     return
@@ -74,6 +76,7 @@ export default defineBotPlugin<AnswerOptions>((options) => {
         //   }
         }
       })
+      consola.info('answer setup done')
     },
   }
 })

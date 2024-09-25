@@ -7,6 +7,12 @@ serve({
     await sleep(10)
     const end = performance.now()
     consola.info(req.url)
-    return new Response(`Slept for ${end - start}ms`)
+    // return new Response(`Slept for ${end - start}ms`)
+    // return json
+    return new Response(JSON.stringify({ slept: end - start }), {
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
   },
 })
