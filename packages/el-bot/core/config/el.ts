@@ -40,6 +40,18 @@ export interface reportConfig {
 
 const pkg = JSON.parse(fs.readFileSync(resolve(process.cwd(), 'package.json'), 'utf-8'))
 
+export interface BotServerOptions {
+  /**
+   * @default 7777
+   */
+  port?: number
+  /**
+   * webhook 配置
+   * - github by octokit
+   */
+  webhooks: WebhooksOptions
+}
+
 export interface ElConfig<T = BotConfig> {
   /**
    * 开启调试模式
@@ -66,17 +78,7 @@ export interface ElConfig<T = BotConfig> {
    * 服务器配置
    * based on Elysia
    */
-  server: {
-    /**
-     * @default 7777
-     */
-    port?: number
-    /**
-     * webhook 配置
-     * - github by octokit
-     */
-    webhooks: WebhooksOptions
-  }
+  server: BotServerOptions
   /**
    * 上报错误信息配置
    */

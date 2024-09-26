@@ -12,7 +12,11 @@ import consola from 'consola'
 import { Hono } from 'hono'
 
 import { cors } from 'hono/cors'
+import { logger } from 'hono/logger'
+
 import colors from 'picocolors'
+import { BotServerOptions } from '../../core'
+import { createWebhooks } from './webhook'
 
 export type Bindings = HttpBindings
 export type BotServer = Hono<{
@@ -22,14 +26,22 @@ export type BotServer = Hono<{
 /**
  * @see https://hono.dev
  */
-export function createHonoServer(port = 7777) {
+export function createHonoServer(options: BotServerOptions) {
   const app = new Hono<{
     Bindings: Bindings
   }>()
 
   app.get('/', c => c.text('Hono is running! I\'m el-bot server!'))
-  app.use('/api/*', cors())
 
+  app.use('/api/*', cors())
+  app.use(logger())
+  // app.use(poweredBy())
+
+  // github webhooks: /api/github/webhooks
+  if (options.webhooks?.enable)
+    createWebhooks(app, options.webhooks)
+
+  const port = options.port || 7777
   serve({
     fetch: app.fetch,
     port,

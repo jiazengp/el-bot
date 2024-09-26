@@ -50,6 +50,7 @@
     "start": "pnpm run start:demo",
     "release": "bumpp",
     "start:demo": "pnpm -C demo start",
+    "test": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -70,7 +71,8 @@
     "npm-run-all": "^4.1.5",
     "pm2": "^5.4.2",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
   },
   "pnpm": {
     "overrides": {

@@ -1,5 +1,6 @@
 import { Webhooks } from '@octokit/webhooks'
 import consola from 'consola'
+import colors from 'picocolors'
 import { OctokitOptions } from './types'
 
 /**
@@ -31,7 +32,7 @@ export function createOctokitWebhooks(octokitOptions: OctokitOptions) {
   })
 
   webhooks.onAny(({ id, name, payload }) => {
-    consola.info(`Received event ${name} with id ${id}`)
+    consola.info(`🪝  ${colors.green(name)} event received: ${colors.green(id)}`)
     // eslint-disable-next-line no-console
     console.dir(payload)
   })

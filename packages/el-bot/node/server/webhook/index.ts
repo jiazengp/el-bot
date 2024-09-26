@@ -1,8 +1,10 @@
+import { Buffer } from 'node:buffer'
 import { createNodeMiddleware } from '@octokit/webhooks'
 import consola from 'consola'
 import { BotServer } from '../hono'
 import { createOctokitWebhooks } from './octokit'
 import { WebhooksOptions } from './types'
+
 // import * as octokit from '@octokit/webhooks'
 // import { githubHandler } from './github-handler'
 import colors from 'picocolors'
@@ -21,20 +23,23 @@ export function createWebhooks(app: BotServer, options: WebhooksOptions) {
   const webhooks = createOctokitWebhooks({
     secret: options.octokit.secret,
   })
-  webhooks.onAny(({ id, name, payload }) => {
-    consola.info(`🪝  ${colors.green(name)} event received: ${colors.green(id)}`)
-    // eslint-disable-next-line no-console
-    console.dir(payload)
-  })
 
+  /**
+   * ref https://github.com/octokit/webhooks.js/blob/b22596fe031aa89873ba7bad0ff4329c0b882832/test/integration/node-middleware.test.ts#L73
+   */
   const middleware = createNodeMiddleware(webhooks, options.octokit.middlewareOptions)
-  app.use(async (ctx, next) => {
-    if (await middleware(ctx.env.incoming, ctx.env.outgoing)) {
-      await next()
+  // for post return
+  app.post('/api/github/webhooks', async (ctx) => {
+    const req = ctx.env.incoming
+    const res = ctx.env.outgoing
+    // console.log('before ctx.body', ctx.body)
+    // if (await middleware(req, res)) {
+    //   // ctx.header('Content-Type', '')
+    //   ctx.body('ok')
+    // }
+    if (await middleware(req, res)) {
+      ctx.header('Content-Length', Buffer.byteLength('ok').toString())
     }
-    else {
-      ctx.env.outgoing.writeHead(404)
-      ctx.env.outgoing.end()
-    }
+    return ctx.body('ok')
   })
 }

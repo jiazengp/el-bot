@@ -7,8 +7,6 @@ import { createHooks } from 'hookable'
 import { GroupMessage, NCWebsocket, PrivateMessage, Send, Structs } from 'node-napcat-ts'
 import colors from 'picocolors'
 
-import { createWebhooks } from '../../node/server/webhook'
-
 import { resolveElConfig } from '../config/el'
 import { connectDb } from '../db'
 import { isFunction } from '../shared'
@@ -151,9 +149,7 @@ export class Bot {
     this.plugins = new Plugins(this)
     this._command = new Command(this)
 
-    this.server = createServer(this.el.server.port)
-    if (this.el.server.webhooks?.enable)
-      createWebhooks(this.server, this.el.server.webhooks)
+    this.server = createServer(this.el.server)
 
     // this.cli = initCli(this, 'el')
 

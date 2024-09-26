@@ -18,6 +18,14 @@ export default defineConfig({
     ],
   },
 
+  server: {
+    webhooks: {
+      octokit: {
+        secret: 'mySecret',
+      },
+    },
+  },
+
   napcat: {
     debug: false,
 
