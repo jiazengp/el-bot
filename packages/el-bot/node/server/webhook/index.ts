@@ -27,9 +27,10 @@ export function createWebhooks(app: BotServer, options: WebhooksOptions) {
     console.dir(payload)
   })
 
-  const middleware = createNodeMiddleware(webhooks)
+  const middleware = createNodeMiddleware(webhooks, options.octokit.middlewareOptions)
   app.use(async (ctx, next) => {
-    await middleware(ctx.env.incoming, ctx.env.outgoing)
+    if (await middleware(ctx.env.incoming, ctx.env.outgoing))
+      return
     await next()
   })
 }
