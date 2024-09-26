@@ -1,18 +1,4 @@
-import { serve, sleep } from 'bun'
-import consola from 'consola'
+import { createHonoServer } from './hono'
 
-serve({
-  async fetch(req) {
-    const start = performance.now()
-    await sleep(10)
-    const end = performance.now()
-    consola.info(req.url)
-    // return new Response(`Slept for ${end - start}ms`)
-    // return json
-    return new Response(JSON.stringify({ slept: end - start }), {
-      headers: {
-        'content-type': 'application/json',
-      },
-    })
-  },
-})
+export * from './hono'
+export const createServer = createHonoServer

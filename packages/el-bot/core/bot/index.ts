@@ -1,15 +1,15 @@
 import type mongoose from 'mongoose'
-import type { Server } from 'node:net'
 import type { ElConfig, ElUserConfig } from '../config/el'
-import path, { resolve } from 'node:path'
+import path from 'node:path'
 import process from 'node:process'
 import fs from 'fs-extra'
 import { createHooks } from 'hookable'
 import { GroupMessage, NCWebsocket, PrivateMessage, Send, Structs } from 'node-napcat-ts'
 import colors from 'picocolors'
 
-import { resolveElConfig } from '../config/el'
+import { createWebhooks } from '../../node/server/webhook'
 
+import { resolveElConfig } from '../config/el'
 import { connectDb } from '../db'
 import { isFunction } from '../shared'
 import { handleError } from '../utils/error'
@@ -18,9 +18,8 @@ import { Command } from './command'
 import { Plugins } from './plugins'
 import { Sender } from './sender'
 import { Status } from './status'
-import { User } from './user'
 
-import Webhook from './webhook'
+import { User } from './user'
 
 // shared
 
@@ -30,7 +29,9 @@ import Webhook from './webhook'
 import type { Plugin, PluginInstallFunction } from './plugins/class'
 import consola from 'consola'
 import yargs from 'yargs'
-import { setCurrentInstance } from '../composition-api/litecycle'
+import { BotServer, createServer } from '../../node/server'
+import { LiteCycleHook } from '../composition-api'
+import { setCurrentInstance } from '../composition-api/lifecycle'
 import { logger } from './logger'
 
 export * from './logger'
@@ -83,9 +84,9 @@ export class Bot {
   napcat: NCWebsocket
 
   /**
-   * webhook server
+   * Server
    */
-  server?: Server
+  server?: BotServer
 
   /**
    * 状态
@@ -110,10 +111,7 @@ export class Bot {
   /**
    * for composition-api
    */
-  hooks = createHooks<{
-    onMessage: (msg: any) => void | Promise<void>
-    onNapcatMessage: (msg: any) => void | Promise<void>
-  }>()
+  hooks = createHooks<LiteCycleHook>()
 
   /**
    * 面向开发者的指令系统
@@ -134,15 +132,16 @@ export class Bot {
    * 日志系统
    */
   logger = logger
-  webhook?: Webhook
   /**
    * 是否开发模式下
    */
   isDev = process.env.NODE_ENV !== 'production'
   rootDir = process.cwd()
   tmpDir = 'tmp/'
-  isTS = fs.existsSync(resolve(this.rootDir, 'tsconfig.json'))
+
   constructor(el: ElUserConfig) {
+    statement()
+
     this.el = resolveElConfig(el)
     // const setting = this.el.setting as MiraiApiHttpSetting
     // this.mirai = new Mirai(setting)
@@ -151,8 +150,10 @@ export class Bot {
     this.sender = new Sender(this)
     this.plugins = new Plugins(this)
     this._command = new Command(this)
-    if (this.el.webhook && this.el.webhook.enable)
-      this.webhook = new Webhook(this)
+
+    this.server = createServer(this.el.server.port)
+    if (this.el.server.webhooks?.enable)
+      createWebhooks(this.server, this.el.server.webhooks)
 
     // this.cli = initCli(this, 'el')
 
@@ -215,7 +216,8 @@ export class Bot {
    * 启动机器人
    */
   async start() {
-    await statement()
+    consola.log('')
+    consola.start('Starting el-bot...')
 
     // 连接数据库
     if (this.el.db?.enable)
@@ -259,19 +261,28 @@ export class Bot {
     this._command.listen()
 
     // 启动 webhook
-    if (this.el.webhook && this.el.webhook.enable) {
-      try {
-        this.server = this.webhook?.start()
-      }
-      catch (err: any) {
-        handleError(err)
-      }
-    }
+    // if (this.el.webhook && this.el.webhook.enable) {
+    //   try {
+    //     this.server = this.webhook?.start()
+    //   }
+    //   catch (err: any) {
+    //     handleError(err)
+    //   }
+    // }
 
     // onMessage
     this.napcat.on('message', async (msg) => {
       await this.hooks.callHook('onMessage', msg)
       await this.hooks.callHook('onNapcatMessage', msg)
+
+      switch (msg.message_type) {
+        case 'private':
+          await this.hooks.callHook('onPrivateMessage', msg)
+          break
+        case 'group':
+          await this.hooks.callHook('onGroupMessage', msg)
+          break
+      }
     })
 
     // 如何解决持久运行
@@ -300,12 +311,12 @@ export class Bot {
     }
 
     // close koa server
-    if (this.el.webhook && this.el.webhook.enable) {
-      if (this.server) {
-        this.server.close()
-        this.logger.info('[webhook] 关闭 Server')
-      }
-    }
+    // if (this.el.webhook && this.el.webhook.enable) {
+    //   if (this.server) {
+    //     this.server.close()
+    //     this.logger.info('[webhook] 关闭 Server')
+    //   }
+    // }
 
     this.logger.success('Bye, Master!')
     consola.log('')

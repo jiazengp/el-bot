@@ -1,5 +1,4 @@
 import type { AnswerOptions } from './utils'
-import consola from 'consola'
 // import axios from 'axios'
 // import * as nodeSchdule from 'node-schedule'
 import { defineBotPlugin, onNapcatMessage } from '../../core'
@@ -38,7 +37,6 @@ export default defineBotPlugin<AnswerOptions>((options) => {
       //   }
       // })
 
-      consola.info('answer setup')
       // 应答
       onNapcatMessage(async (msg) => {
         // use async in some
@@ -76,7 +74,6 @@ export default defineBotPlugin<AnswerOptions>((options) => {
         //   }
         }
       })
-      consola.info('answer setup done')
     },
   }
 })

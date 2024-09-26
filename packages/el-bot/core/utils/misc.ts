@@ -1,8 +1,8 @@
 import process from 'node:process'
 import consola from 'consola'
 
+import nodeNapcatTsPkg from 'node-napcat-ts/package.json'
 import colors from 'picocolors'
-
 import pkg from '../../package.json'
 
 /**
@@ -21,15 +21,11 @@ export async function sleep(ms: number): Promise<void> {
 /**
  * 声明
  */
-export async function statement() {
+export function statement() {
   consola.debug(`Docs: ${colors.dim(pkg.homepage)}`)
   consola.debug(`GitHub: ${colors.dim(pkg.repository.url)}`)
   consola.info(`El Bot: ${colors.cyan(`v${pkg.version}`)}`)
-  const napcatTSVersion = (pkg.dependencies || {})['node-napcat-ts']
-  if (napcatTSVersion) {
-    const { version } = (await import('node-napcat-ts/package.json'))
-    consola.info(`napcat-node-ts: ${colors.cyan(`v${version}`)}`)
-  }
+  consola.info(`napcat-node-ts: ${colors.cyan(`v${nodeNapcatTsPkg.version}`)}`)
   // eslint-disable-next-line no-console
   console.log('')
 }

@@ -1,1 +1,2 @@
-export * from './onMessage'
+export * from './hooks'
+export * from './lifecycle'

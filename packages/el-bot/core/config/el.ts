@@ -1,4 +1,4 @@
-import type { WebhookConfig } from '../bot/webhook'
+import type { WebhooksOptions } from '../../node/server/webhook'
 import type { BotConfig, BotUserConfig } from './bot'
 import { resolve } from 'node:path'
 import process from 'node:process'
@@ -61,10 +61,22 @@ export interface ElConfig<T = BotConfig> {
   napcat: NCWebsocketOptions & {
     debug?: boolean
   }
+
   /**
-   * webhook 配置
+   * 服务器配置
+   * based on Elysia
    */
-  webhook: WebhookConfig
+  server: {
+    /**
+     * @default 7777
+     */
+    port?: number
+    /**
+     * webhook 配置
+     * - github by octokit
+     */
+    webhooks: WebhooksOptions
+  }
   /**
    * 上报错误信息配置
    */
@@ -114,11 +126,15 @@ export function resolveElConfig(userConfig: ElUserConfig) {
       admin: [910426929],
       devGroup: 120117362,
     },
-    webhook: {
-      enable: true,
-      port: 7777,
-      path: '/webhook',
-      secret: 'el-psy-congroo',
+    server: {
+      webhooks: {
+        enable: true,
+        port: 7777,
+        octokit: {
+          secret: 'el-psy-congroo',
+          middlewareOptions: {},
+        },
+      },
     },
     report: {
       enable: false,
