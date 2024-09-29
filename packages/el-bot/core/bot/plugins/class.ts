@@ -125,8 +125,8 @@ export class Plugins {
       consola.start(`加载自定义插件 - 共 ${colors.green(customPlugins.length)} 个...`)
       consola.log('')
 
-      for (const customPluginName of customPlugins) {
-        const pluginPath = path.resolve(absolutePluginDir, `${customPluginName}.ts`)
+      for (const pluginItem of customPlugins) {
+        const pluginPath = path.resolve(absolutePluginDir, pluginItem.path)
         const importedCustomPlugin = (await import(pluginPath)).default
         let customPlugin: BotPlugin
         if (typeof importedCustomPlugin === 'function') {
@@ -137,6 +137,7 @@ export class Plugins {
           customPlugin = importedCustomPlugin
         }
         await customPlugin.setup(this.ctx)
+        pluginLogger.child({ plugin: pluginItem.name }).success(`加载成功`)
       }
     }
   }

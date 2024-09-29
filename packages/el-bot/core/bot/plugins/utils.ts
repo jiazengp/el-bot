@@ -5,14 +5,31 @@ import { BotPlugin } from './types'
  * 获取目录下的所有插件
  * @param dir
  */
-export async function getAllPlugins(dir: string): Promise<string[]> {
-  const plugins = await fs.readdir(dir)
+export async function getAllPlugins(dir: string) {
+  const pluginFiles = await fs.readdir(dir)
 
-  return plugins.map((plugin) => {
-    // remove suffix
-    const pluginName = plugin.replace(/\.ts$/, '')
-    return pluginName
-  })
+  const plugins: {
+    name: string
+    path: string
+  }[] = []
+  for (const plugin of pluginFiles) {
+    const name = plugin.replace(/\.ts$/, '')
+    const stat = await fs.stat(`${dir}/${plugin}`)
+    if (stat.isDirectory()) {
+      const path = `${plugin}/index.ts`
+      plugins.push({
+        name,
+        path,
+      })
+    }
+    else {
+      plugins.push({
+        name,
+        path: plugin,
+      })
+    }
+  }
+  return plugins
 }
 
 export interface PluginOptions {}

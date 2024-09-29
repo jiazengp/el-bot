@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "description": "A dev demo for el-bot.",
   "scripts": {
-    "dev": "bun --hot bot/index.ts",
+    "dev": "bun run watch",
+    "dev:hmr": "bun --hot bot/index.ts",
     "dev:v": "vite-node -w ../packages/el-bot/bin/el-bot.ts",
     "build": "tsup",
     "pm2": "pm2 start pm2.config.cjs",

@@ -13,6 +13,7 @@ import { Hono } from 'hono'
 
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
+import { poweredBy } from 'hono/powered-by'
 
 import colors from 'picocolors'
 import { BotServerOptions } from '../../core'
@@ -31,15 +32,17 @@ export function createHonoServer(options: BotServerOptions) {
     Bindings: Bindings
   }>()
 
-  app.get('/', c => c.text('Hono is running! I\'m el-bot server!'))
-
   app.use('/api/*', cors())
   app.use(logger())
-  // app.use(poweredBy())
+  app.use(poweredBy())
 
   // github webhooks: /api/github/webhooks
   if (options.webhooks?.enable)
     createWebhooks(app, options.webhooks)
+
+  app.get('/', (c) => {
+    return c.text('Hono is running! I\'m el-bot server!')
+  })
 
   const port = options.port || 7777
   serve({
@@ -47,7 +50,7 @@ export function createHonoServer(options: BotServerOptions) {
     port,
   })
   const url = `http://localhost:${port}`
-  consola.success(`🔥 Hono is running at ${colors.green(url)}`)
+  consola.success(`🔥 Hono is running:  ${colors.green(url)}`)
 
   return app
 }

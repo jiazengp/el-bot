@@ -5,8 +5,9 @@ import process from 'node:process'
 import fs from 'fs-extra'
 // import type { MiraiApiHttpSetting } from 'mirai-ts'
 import { NCWebsocketOptions } from 'node-napcat-ts'
-import { Target } from '../../types'
+import { GetWsParam } from 'qq-guild-bot'
 
+import { Target } from '../../types'
 import { mergeConfig } from '../utils/config'
 
 export interface dbConfig {
@@ -73,10 +74,17 @@ export interface ElConfig<T = BotConfig> {
   napcat: NCWebsocketOptions & {
     debug?: boolean
   }
+  /**
+   * qq-guild-bot 配置
+   * GetWsParam
+   * @see https://bot.q.qq.com/wiki/develop/nodesdk/#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B
+   * @see indents https://bot.q.qq.com/wiki/develop/api/gateway/intents.html#%E4%BA%8B%E4%BB%B6%E8%AE%A2%E9%98%85-intents
+   */
+  qq?: GetWsParam
 
   /**
    * 服务器配置
-   * based on Elysia
+   * based on hono
    */
   server: BotServerOptions
   /**

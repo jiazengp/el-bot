@@ -18,7 +18,7 @@ export * from './types'
  */
 export function createWebhooks(app: BotServer, options: WebhooksOptions) {
   const path = options.octokit.middlewareOptions?.path || '/api/github/webhooks'
-  consola.success(`🪝  Webhooks enabled at ${colors.green(`http://localhost:${options.port}${path}`)}`)
+  consola.success(`🪝  Webhooks enabled: ${colors.green(`http://localhost:${options.port}${path}`)}`)
 
   const webhooks = createOctokitWebhooks({
     secret: options.octokit.secret,
@@ -37,9 +37,10 @@ export function createWebhooks(app: BotServer, options: WebhooksOptions) {
     //   // ctx.header('Content-Type', '')
     //   ctx.body('ok')
     // }
+    // To fix ERR_STREAM_WRITE_AFTER_END
     if (await middleware(req, res)) {
       ctx.header('Content-Length', Buffer.byteLength('ok').toString())
+      return ctx.body('GitHub Webhook')
     }
-    return ctx.body('ok')
   })
 }

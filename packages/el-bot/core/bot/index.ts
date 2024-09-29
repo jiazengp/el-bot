@@ -4,8 +4,9 @@ import path from 'node:path'
 import process from 'node:process'
 import fs from 'fs-extra'
 import { createHooks } from 'hookable'
-import { GroupMessage, NCWebsocket, PrivateMessage, Send, Structs } from 'node-napcat-ts'
+import { NCWebsocket, Send, Structs } from 'node-napcat-ts'
 import colors from 'picocolors'
+import { createOpenAPI } from 'qq-guild-bot'
 
 import { resolveElConfig } from '../config/el'
 import { connectDb } from '../db'
@@ -28,9 +29,10 @@ import type { Plugin, PluginInstallFunction } from './plugins/class'
 import consola from 'consola'
 import yargs from 'yargs'
 import { BotServer, createServer } from '../../node/server'
-import { LiteCycleHook } from '../composition-api'
+import { LiteCycleHook, NapcatMessage } from '../composition-api'
 import { setCurrentInstance } from '../composition-api/lifecycle'
 import { logger } from './logger'
+import { createQqSDK, QQWebsocketClient } from './platform'
 
 export * from './logger'
 export * from './plugins'
@@ -80,6 +82,16 @@ export class Bot {
    * node-napcat-ts
    */
   napcat: NCWebsocket
+  /**
+   * qq-guild-bot
+   * QQ 官方机器人
+   * https://q.qq.com/qqbot/
+   * @see https://bot.q.qq.com/wiki/develop/nodesdk/
+   */
+  qq?: {
+    client: ReturnType<typeof createOpenAPI>
+    ws: QQWebsocketClient
+  }
 
   /**
    * Server
@@ -140,6 +152,7 @@ export class Bot {
   constructor(el: ElUserConfig) {
     statement()
 
+    setCurrentInstance(this)
     this.el = resolveElConfig(el)
     // const setting = this.el.setting as MiraiApiHttpSetting
     // this.mirai = new Mirai(setting)
@@ -171,13 +184,16 @@ export class Bot {
     // init napcat
     const napcatConfig = this.el.napcat
     this.napcat = new NCWebsocket(napcatConfig, this.el.debug || napcatConfig.debug)
+
+    // init qq
+    if (this.el.qq)
+      this.qq = createQqSDK(this.el.qq)
   }
 
   /**
    * 机器人当前消息 快捷回复
    */
-
-  reply(rawMsg: PrivateMessage | GroupMessage, msg: Send[keyof Send][] | string, quote = false) {
+  reply(rawMsg: NapcatMessage, msg: Send[keyof Send][] | string, quote = false) {
     const napcat = this.napcat
 
     // 文本消息
@@ -213,7 +229,7 @@ export class Bot {
    */
   async start() {
     consola.log('')
-    consola.start('Starting el-bot...')
+    consola.debug('Starting el-bot...')
 
     // 连接数据库
     if (this.el.db?.enable)
@@ -256,16 +272,6 @@ export class Bot {
     // 监听并解析用户指令
     this._command.listen()
 
-    // 启动 webhook
-    // if (this.el.webhook && this.el.webhook.enable) {
-    //   try {
-    //     this.server = this.webhook?.start()
-    //   }
-    //   catch (err: any) {
-    //     handleError(err)
-    //   }
-    // }
-
     // onMessage
     this.napcat.on('message', async (msg) => {
       await this.hooks.callHook('onMessage', msg)
@@ -273,6 +279,8 @@ export class Bot {
 
       switch (msg.message_type) {
         case 'private':
+          await this.hooks.callHook('onPrivateFriendMessage', msg)
+          await this.hooks.callHook('onPrivateGroupMessage', msg)
           await this.hooks.callHook('onPrivateMessage', msg)
           break
         case 'group':
@@ -346,7 +354,7 @@ export class Bot {
   }
 
   /**
-   * 注册插件
+   * 动态注册插件
    * @param name 插件名称
    * @param plugin 插件函数
    * @param options 插件选项

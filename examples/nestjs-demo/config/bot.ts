@@ -17,29 +17,27 @@ export default defineBotConfig({
   'name': '嘿',
   'autoloadPlugins': true,
 
-  'plugins': {
-    default: [
-      // # - dev
-      'admin',
-      'answer',
-      // "blacklist",
-      // "counter",
-      // "feeder",
-      // "forward",
-      // "limit",
-      // "memo",
-      'nbnhhsh',
-      'qrcode',
-      // "rss",
-      // "report",
-      // "search",
-      // "search-image",
-      'teach',
-      // "workflow",
-    ],
-    official: [],
-    custom: ['./plugins/webhook', './plugins/command'],
-  },
+  // plugins
+  // default: [
+  //   // # - dev
+  //   'admin',
+  //   'answer',
+  //   // "blacklist",
+  //   // "counter",
+  //   // "feeder",
+  //   // "forward",
+  //   // "limit",
+  //   // "memo",
+  //   'nbnhhsh',
+  //   'qrcode',
+  //   // "rss",
+  //   // "report",
+  //   // "search",
+  //   // "search-image",
+  //   'teach',
+  //   // "workflow",
+  // ],
+  // custom: ['./plugins/webhook', './plugins/command'],
 
   'master': [910426929],
 
